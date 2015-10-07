@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.cocos2dx.lib.Cocos2dxActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -126,6 +127,7 @@ public class UserFacebook implements InterfaceUser{
     	PluginWrapper.runOnMainThread(new Runnable() {
             @Override
             public void run() {
+            	Log.d("UserFacebook", "login with permissions:" + permissions);
                 String[] permissionArray = permissions.split(",");
                 boolean publishPermission = false;
                 for (int i = 0; i < permissionArray.length; i++) {
@@ -257,11 +259,24 @@ public class UserFacebook implements InterfaceUser{
                             LogD(response.toString());
                             
                             FacebookRequestError error = response.getError();
-                            
+                            Cocos2dxActivity act = (Cocos2dxActivity) Cocos2dxActivity.getContext();
                             if(error == null){
-                            	nativeRequestCallback(0, response.getGraphObject().getInnerJSONObject().toString(), nativeCallback);
+                            	final String data = response.getGraphObject().getInnerJSONObject().toString();
+                            	act.runOnGLThread(new Runnable() {
+									@Override
+									public void run() {
+										nativeRequestCallback(0, data, nativeCallback);
+									}
+                            	});
                             }else{
-                            	nativeRequestCallback(error.getErrorCode(), "{\"error_message\":\""+error.getErrorMessage()+"\"}", nativeCallback);
+                            	final int errCode = error.getErrorCode();
+                            	final String msg = "{\"error_message\":\""+error.getErrorMessage()+"\"}";
+                            	act.runOnGLThread(new Runnable() {
+									@Override
+									public void run() {
+										nativeRequestCallback(errCode, msg, nativeCallback);
+									}
+                            	});
                             }
                         }
                     });

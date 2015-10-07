@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.cocos2dx.lib.Cocos2dxActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -158,8 +160,13 @@ public class PluginWrapper {
         if (null != sGLThreadHandler) {
             sGLThreadHandler.post(r);
         } else {
-            Log.i(TAG, "call back invoked on main thread");
-            r.run();
+            Cocos2dxActivity act = (Cocos2dxActivity) Cocos2dxActivity.getContext();
+            if(act != null) {
+                act.runOnGLThread(r);
+            } else {
+                Log.i(TAG, "call back invoked on main thread");
+                r.run();
+            }
         }
     }
 
