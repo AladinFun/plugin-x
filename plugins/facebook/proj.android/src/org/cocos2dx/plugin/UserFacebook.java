@@ -25,6 +25,7 @@
 package org.cocos2dx.plugin;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Hashtable;
@@ -34,6 +35,7 @@ import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.cocos2dx.lib.Cocos2dxActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -103,16 +105,23 @@ public class UserFacebook implements InterfaceUser{
         LogD("not supported in Facebook pluign");
     }
 
+    private List<String> requestedReadPermissions = new ArrayList<String>();
+    private List<String> requestedPublishPermissions = new ArrayList<String>();
+
     @Override
     public void login() {
         PluginWrapper.runOnMainThread(new Runnable() {
             @Override
             public void run() {
                 Session session = Session.getActiveSession();
-                
+                requestedReadPermissions.clear();
+                requestedReadPermissions.add("email");
+                requestedReadPermissions.add("user_friends");
+                requestedPublishPermissions.clear();
                 if (!session.isOpened() && !session.isClosed()) {
                     OpenRequest request = new Session.OpenRequest(mContext);
                     request.setCallback(statusCallback);
+                    request.setPermissions(requestedReadPermissions);
                     session.openForRead(request);
                 } else {
                     Session.openActiveSession(mContext, true, statusCallback);
@@ -126,36 +135,65 @@ public class UserFacebook implements InterfaceUser{
     	PluginWrapper.runOnMainThread(new Runnable() {
             @Override
             public void run() {
+                Log.d("UserFacebook", "login with permissions:" + permissions);
+                Session session = Session.getActiveSession();
+                requestedReadPermissions.clear();
+                requestedPublishPermissions.clear();
                 String[] permissionArray = permissions.split(",");
                 boolean publishPermission = false;
                 for (int i = 0; i < permissionArray.length; i++) {
-                    if (allPublishPermissions.contains(permissionArray[i])) {
+                    String permission = permissionArray[i];
+                    if (allPublishPermissions.contains(permission) {
                         publishPermission = true;
-                        break;
+                        if(!session.isPermissionGranted(permission)) {
+                           requestedPublishPermissions.add(permission);
+                        }
+                    } else {
+                       if(!session.isPermissionGranted(permission)) {
+                           requestedReadPermissions.add(permissionArray[i]);
+                       }
                     }
                 }
                 
-                Session session = Session.getActiveSession();
+                if(!session.isPermissionGranted("email") && !requestedReadPermissions.contains("email")) {
+                   requestedReadPermissions.add("email");
+                }
+                if(!session.isPermissionGranted("user_friends") && !requestedReadPermissions.contains("user_friends")) {
+                   requestedReadPermissions.add("user_friends");
+                }
                 if(session.isOpened()){
                 	if(session.getPermissions().containsAll(Arrays.asList(permissionArray))){
                 		LogD("login called when use is already connected");
                 	}else{
-                		NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, Arrays.asList(permissionArray));
-                		newPermissionsRequest.setCallback(statusCallback);
-                		if(publishPermission)
-                			session.requestNewPublishPermissions(newPermissionsRequest);
-                		else
-                			session.requestNewReadPermissions(newPermissionsRequest);
+                       if(requestedReadPermissions.isEmpty()) {
+                           NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, requestedReadPermissions);
+                           newPermissionsRequest.setCallback(statusCallback);
+                           session.requestNewReadPermissions(newPermissionsRequest);
+                       } else if(requestedPublishPermissions.isEmpty()){
+                           NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, requestedPublishPermissions);
+                           newPermissionsRequest.setCallback(statusCallback);
+                           session.requestNewPublishPermissions(newPermissionsRequest);
+                       }
+//                     NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, Arrays.asList(permissionArray));
+//                     newPermissionsRequest.setCallback(statusCallback);
+//                     if(publishPermission)
+//                         session.requestNewPublishPermissions(newPermissionsRequest);
+//                     else
+//                         session.requestNewReadPermissions(newPermissionsRequest);
                 	}
                 }else{
                 	if (!session.isClosed()) {
                         OpenRequest request = new Session.OpenRequest(mContext);
                         request.setCallback(statusCallback);
-                        request.setPermissions(Arrays.asList(permissionArray));
-                        if(publishPermission)
-                        	session.openForPublish(request);
-                        else
-                        	session.openForRead(request);
+                        if(!requestedReadPermissions.isEmpty()) {
+                            request.setPermissions(requestedReadPermissions);
+                            session.openForRead(request);
+                        } else if(!requestedPublishPermissions.isEmpty()){
+                            request.setPermissions(requestedPublishPermissions);
+                            session.openForPublish(request);
+                        } else {
+                            session.openForRead(request);
+                        }
                     } else {
                         Session.openActiveSession(mContext, true, statusCallback);
                     }
@@ -257,11 +295,24 @@ public class UserFacebook implements InterfaceUser{
                             LogD(response.toString());
                             
                             FacebookRequestError error = response.getError();
-                            
+                            Cocos2dxActivity act = (Cocos2dxActivity) Cocos2dxActivity.getContext();
                             if(error == null){
-                            	nativeRequestCallback(0, response.getGraphObject().getInnerJSONObject().toString(), nativeCallback);
+                               final String data = response.getGraphObject().getInnerJSONObject().toString();
+                               act.runOnGLThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       nativeRequestCallback(0, data, nativeCallback);
+                                   }
+                               });
                             }else{
-                            	nativeRequestCallback(error.getErrorCode(), "{\"error_message\":\""+error.getErrorMessage()+"\"}", nativeCallback);
+                               final int errCode = error.getErrorCode();
+                               final String msg = "{\"error_message\":\""+error.getErrorMessage()+"\"}";
+                               act.runOnGLThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       nativeRequestCallback(errCode, msg, nativeCallback);
+                                   }
+                               });
                             }
                         }
                     });
@@ -372,12 +423,37 @@ public class UserFacebook implements InterfaceUser{
         	onSessionStateChange(session, state, exception);
             if(false == isLoggedIn){
                 if(SessionState.OPENED == state){
-                	isLoggedIn = true;
-                    UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_SUCCEED, getSessionMessage(session));  
-                }else if(SessionState.CLOSED_LOGIN_FAILED == state /*|| SessionState.CLOSED == state*/){                 
+                   Iterator<String> it = requestedReadPermissions.iterator();
+                   while(it.hasNext()) {
+                       String permission = it.next();
+                       if(session.isPermissionGranted(permission)) {
+                           it.remove();
+                       }
+                   }
+                   it = requestedPublishPermissions.iterator();
+                   while(it.hasNext()) {
+                       String permission = it.next();
+                       if(session.isPermissionGranted(permission)) {
+                           it.remove();
+                       }
+                   }
+                   if(requestedReadPermissions.isEmpty() && requestedPublishPermissions.isEmpty()) {
+                       isLoggedIn = true;
+                       UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_SUCCEED, getSessionMessage(session)); 
+                   } else if(!requestedReadPermissions.isEmpty()) {
+                       NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, requestedReadPermissions);
+                       newPermissionsRequest.setCallback(statusCallback);
+                       session.requestNewReadPermissions(newPermissionsRequest);
+                   } else if(!requestedPublishPermissions.isEmpty()) {
+                       NewPermissionsRequest newPermissionsRequest = new NewPermissionsRequest(mContext, requestedPublishPermissions);
+                       newPermissionsRequest.setCallback(statusCallback);
+                       session.requestNewPublishPermissions(newPermissionsRequest);
+                   }
+                }else if(SessionState.CLOSED_LOGIN_FAILED == state /*|| SessionState.CLOSED == state*/){      
+                   requestedPublishPermissions.clear();
+                   requestedReadPermissions.clear();
                 	UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_FAILED, getErrorMessage(exception, "login failed"));
                 }
-                              
             }
             else{
                 if(SessionState.OPENED_TOKEN_UPDATED == state){
