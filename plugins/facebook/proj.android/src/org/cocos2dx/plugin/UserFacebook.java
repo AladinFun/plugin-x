@@ -143,7 +143,7 @@ public class UserFacebook implements InterfaceUser{
                 boolean publishPermission = false;
                 for (int i = 0; i < permissionArray.length; i++) {
                     String permission = permissionArray[i];
-                    if (allPublishPermissions.contains(permission) {
+                    if (allPublishPermissions.contains(permission)) {
                         publishPermission = true;
                         if(!session.isPermissionGranted(permission)) {
                            requestedPublishPermissions.add(permission);
