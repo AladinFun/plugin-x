@@ -57,8 +57,14 @@ using namespace cocos2d::plugin;
         if(listener){
             TProductList pdlist;
             if (products) {
+                NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+                [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
                 for(SKProduct *product in products){
                     TProductInfo info;
+                    [numberFormatter setLocale:product.priceLocale];
+                    NSString *localizedPrice = [numberFormatter stringFromNumber:product.price];
+                    info.insert(std::make_pair("localizedPrice", std::string([localizedPrice UTF8String])));
                     info.insert(std::make_pair("productId", std::string([product.productIdentifier UTF8String])));
                     info.insert(std::make_pair("productName", std::string([product.localizedTitle UTF8String])));
                     info.insert(std::make_pair("productPrice", std::string([[product.price stringValue] UTF8String])));

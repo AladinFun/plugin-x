@@ -109,9 +109,9 @@
 		FA09A316168ADBC2008C1C7B = {
 			isa = PBXGroup;
 			children = (
+				FA09A33C168ADC1F008C1C7B /* PluginManager.cpp */,
 				FAB6DF951755D7E500C90D89 /* PluginParam.cpp */,
 				FA0CB8B5168D3CC200E36B11 /* ios */,
-				FA09A33C168ADC1F008C1C7B /* PluginManager.cpp */,
 				FA09A336168ADC05008C1C7B /* include */,
 				FA09A323168ADBC2008C1C7B /* Frameworks */,
 				FA09A322168ADBC2008C1C7B /* Products */,

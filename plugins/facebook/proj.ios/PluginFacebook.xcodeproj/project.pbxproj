@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BA0613B81AC23D47003118D6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0613B71AC23D47003118D6 /* FacebookSDK.framework */; };
 		BA34A761195AA8C7002D0ECD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA34A760195AA8C7002D0ECD /* Foundation.framework */; };
 		BA34A79E195AA939002D0ECD /* ShareFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = BA34A79B195AA939002D0ECD /* ShareFacebook.m */; };
 		BA34A79F195AA939002D0ECD /* UserFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = BA34A79D195AA939002D0ECD /* UserFacebook.m */; };
+		D5F110291BCA575A001842F3 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5F110281BCA575A001842F3 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,7 +26,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BA0613B71AC23D47003118D6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		BA34A75D195AA8C7002D0ECD /* libPluginFacebook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPluginFacebook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA34A760195AA8C7002D0ECD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BA34A764195AA8C7002D0ECD /* PluginFacebook-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PluginFacebook-Prefix.pch"; sourceTree = "<group>"; };
@@ -34,6 +33,7 @@
 		BA34A79B195AA939002D0ECD /* ShareFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareFacebook.m; sourceTree = "<group>"; };
 		BA34A79C195AA939002D0ECD /* UserFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserFacebook.h; sourceTree = "<group>"; };
 		BA34A79D195AA939002D0ECD /* UserFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFacebook.m; sourceTree = "<group>"; };
+		D5F110281BCA575A001842F3 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,8 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5F110291BCA575A001842F3 /* FacebookSDK.framework in Frameworks */,
 				BA34A761195AA8C7002D0ECD /* Foundation.framework in Frameworks */,
-				BA0613B81AC23D47003118D6 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,7 +69,7 @@
 		BA34A75F195AA8C7002D0ECD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BA0613B71AC23D47003118D6 /* FacebookSDK.framework */,
+				D5F110281BCA575A001842F3 /* FacebookSDK.framework */,
 				BA34A760195AA8C7002D0ECD /* Foundation.framework */,
 			);
 			name = Frameworks;

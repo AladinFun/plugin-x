@@ -159,14 +159,17 @@ NSArray * _transactionArray;
 
 - (void)failedTransaction:(SKPaymentTransaction *)transaction {
     OUTPUT_LOG(@"failedTransaction...");
-    if (transaction.error.code != SKErrorPaymentCancelled)
+    [self finishTransaction:transaction.payment.productIdentifier];
+    if (transaction.error.code == SKErrorPaymentCancelled)
+    {
+        OUTPUT_LOG(@"Transaction cancelled by user");
+        [IAPWrapper onPayResult:self withRet:PaymentTransactionStateFailed withMsg:@"cancelled"];
+    }
+    else
     {
         OUTPUT_LOG(@"Transaction error: %@", transaction.error.localizedDescription);
-        [[[UIAlertView alloc] initWithTitle:@"支付结果" message:transaction.error.localizedDescription delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil] show];
+        [IAPWrapper onPayResult:self withRet:PaymentTransactionStateFailed withMsg:transaction.error.localizedDescription];
     }
-    
-    [self finishTransaction:transaction.payment.productIdentifier];
-    [IAPWrapper onPayResult:self withRet:PaymentTransactionStateFailed withMsg:@""];
 }
 
 - (void)restoreCompletedTransactions {
