@@ -35,13 +35,13 @@ import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.cocos2dx.lib.Cocos2dxActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.aladinfun.nativeutil.BaseEntryActivity;
 import com.facebook.AppEventsLogger;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -49,6 +49,7 @@ import com.facebook.LoggingBehavior;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.Session.Builder;
 import com.facebook.Session.NewPermissionsRequest;
 import com.facebook.Session.OpenRequest;
 import com.facebook.SessionState;
@@ -180,6 +181,10 @@ public class UserFacebook implements InterfaceUser{
                 	Log.d(LOG_TAG, "login(s) session is opened");
                 	if(session.getPermissions().containsAll(Arrays.asList(permissionArray))){
                 		LogD("login called when user is already connected");
+                		loginRequested = false;
+                		requestedReadPermissions.clear();
+                		requestedPublishPermissions.clear();
+                		UserWrapper.onActionResult(mAdapter, UserWrapper.ACTION_RET_LOGIN_SUCCEED, getSessionMessage(session));
                 	}else{
                        if(!requestedReadPermissions.isEmpty()) {
                     	   Log.d(LOG_TAG, "login(s) req read permission->" + requestedReadPermissions.toString());
@@ -203,25 +208,24 @@ public class UserFacebook implements InterfaceUser{
                 	}
                 }else{
                 	Log.d(LOG_TAG, "login(s) session is not opened");
-                	if (!session.isClosed()) {
-                        OpenRequest request = new Session.OpenRequest(mContext);
-                        request.setCallback(statusCallback);
-                        if(!requestedReadPermissions.isEmpty()) {
-                        	Log.d(LOG_TAG, "login(s) open for read permission->" + requestedReadPermissions.toString());
-                            request.setPermissions(requestedReadPermissions);
-                            session.openForRead(request);
-                        } else if(!requestedPublishPermissions.isEmpty()){
-                        	Log.d(LOG_TAG, "login(s) open for publish permission->" + requestedPublishPermissions.toString());
-                            request.setPermissions(requestedPublishPermissions);
-                            session.openForPublish(request);
-                        } else {
-                        	Log.d(LOG_TAG, "login(s) open for read");
-                            session.openForRead(request);
-                        }
-                    } else {
-                    	Log.d(LOG_TAG, "login(s) openActiveSession");
-                        Session.openActiveSession(mContext, true, statusCallback);
-                    }
+                	session.removeCallback(statusCallback);
+                    session.closeAndClearTokenInformation();
+                    session = new Builder(mContext).build();
+                    Session.setActiveSession(session);
+	                OpenRequest request = new Session.OpenRequest(mContext);
+	                request.setCallback(statusCallback);
+	                if(!requestedReadPermissions.isEmpty()) {
+	                	Log.d(LOG_TAG, "login(s) open for read permission->" + requestedReadPermissions.toString());
+	                    request.setPermissions(requestedReadPermissions);
+	                    session.openForRead(request);
+	                } else if(!requestedPublishPermissions.isEmpty()){
+	                	Log.d(LOG_TAG, "login(s) open for publish permission->" + requestedPublishPermissions.toString());
+	                    request.setPermissions(requestedPublishPermissions);
+	                    session.openForPublish(request);
+	                } else {
+	                	Log.d(LOG_TAG, "login(s) open for read");
+	                    session.openForRead(request);
+	                }
                 }
                 
             } 
@@ -325,7 +329,7 @@ public class UserFacebook implements InterfaceUser{
                             LogD(response.toString());
                             
                             FacebookRequestError error = response.getError();
-                            Cocos2dxActivity act = (Cocos2dxActivity) Cocos2dxActivity.getContext();
+                            BaseEntryActivity act = (BaseEntryActivity) BaseEntryActivity.getContext();
                             if(error == null){
                                final String data = response.getGraphObject().getInnerJSONObject().toString();
                                act.runOnGLThread(new Runnable() {
