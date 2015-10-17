@@ -332,9 +332,8 @@ public class ShareFacebook implements InterfaceShare{
 					while(it.hasNext()){
 						String key = it.next();
 						if(!"request".equals(key)){
-							
 							buffer.append("\"");
-							buffer.append(values.getString(it.next()));
+							buffer.append(values.getString(key));
 							buffer.append("\",");
 						}
 					}
