@@ -42,6 +42,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.FacebookException;
+import com.facebook.FacebookOperationCanceledException;
+import com.facebook.Settings;
 import com.facebook.model.GraphObject;
 import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
@@ -56,7 +58,6 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.FeedDialogBuilder;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.facebook.widget.WebDialog.RequestsDialogBuilder;
-import com.facebook.Settings;
 
 public class ShareFacebook implements InterfaceShare{
 
@@ -425,7 +426,13 @@ public class ShareFacebook implements InterfaceShare{
 				@Override
 				public void onComplete(Bundle arg0,
 						FacebookException arg1) {
-					ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "share success");
+					if(arg1 == null) {
+						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "share success");
+					} else if(arg1 instanceof FacebookOperationCanceledException) {
+						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
+					} else {
+						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+					}
 					
 				}
 			}
