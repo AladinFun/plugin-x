@@ -181,7 +181,7 @@ bool js_pluginx_PluginProtocol_callFuncWithParam(JSContext *cx, uint32_t argc, j
  		std::vector<cocos2d::plugin::PluginParam*> params;
  		uint32_t i = 1;
  		while (i < argc) {
- 			JSObject *tmpObj = args.get(1).toObjectOrNull();
+ 			JSObject *tmpObj = args.get(i).toObjectOrNull();
             if (tmpObj == NULL)
                 break;
 

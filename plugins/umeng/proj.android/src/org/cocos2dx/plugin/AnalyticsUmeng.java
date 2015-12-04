@@ -204,7 +204,7 @@ public class AnalyticsUmeng implements InterfaceAnalytics{
         if (!isValid()) return;
         try{
             String eventId = eventInfo.getString("Param1");
-            int duration = eventInfo.getInt("Param2");
+            int duration = Integer.parseInt(eventInfo.getString("Param2"));
             MobclickAgent.onEventDuration(mContext, eventId, duration);
         } catch(Exception e){
             LogE("Exception in logEventWithDuration", e);
