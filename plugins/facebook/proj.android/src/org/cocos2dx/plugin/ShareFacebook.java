@@ -25,11 +25,11 @@
 package org.cocos2dx.plugin;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,26 +38,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
+import android.net.Uri;
 import android.util.Log;
 
+import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookOperationCanceledException;
-import com.facebook.Settings;
-import com.facebook.model.GraphObject;
-import com.facebook.model.OpenGraphAction;
-import com.facebook.model.OpenGraphObject;
-import com.facebook.widget.FacebookDialog;
-import com.facebook.widget.FacebookDialog.MessageDialogFeature;
-import com.facebook.widget.FacebookDialog.OpenGraphActionDialogFeature;
-import com.facebook.widget.FacebookDialog.OpenGraphMessageDialogFeature;
-import com.facebook.widget.FacebookDialog.PendingCall;
-import com.facebook.widget.FacebookDialog.ShareDialogBuilder;
-import com.facebook.widget.FacebookDialog.ShareDialogFeature;
-import com.facebook.widget.WebDialog;
-import com.facebook.widget.WebDialog.FeedDialogBuilder;
-import com.facebook.widget.WebDialog.OnCompleteListener;
-import com.facebook.widget.WebDialog.RequestsDialogBuilder;
+import com.facebook.FacebookSdk;
+import com.facebook.share.Sharer;
+import com.facebook.share.Sharer.Result;
+import com.facebook.share.internal.ShareFeedContent;
+import com.facebook.share.model.GameRequestContent;
+import com.facebook.share.model.GameRequestContent.ActionType;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareOpenGraphAction;
+import com.facebook.share.model.ShareOpenGraphContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.GameRequestDialog;
+import com.facebook.share.widget.ShareDialog;
 
 public class ShareFacebook implements InterfaceShare{
 
@@ -80,7 +78,6 @@ public class ShareFacebook implements InterfaceShare{
     public ShareFacebook(Context context) {
 		mContext = (Activity)context;		
 		mAdapter = this;
-		FacebookWrapper.setDialogCallback(new FacebookDialogCallback());
 	}
     
 	@Override
@@ -99,14 +96,38 @@ public class ShareFacebook implements InterfaceShare{
 					String url = cpInfo.get("link");
 					String text = cpInfo.get("description");
 					String picture = cpInfo.get("imageUrl");
-					FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(mContext)
-						.setCaption(caption)
-						.setPicture(picture)
-						.setLink(url)
-						.setDescription(text)
-				        .build();
 					
-					FacebookWrapper.track(shareDialog.present());
+					ShareDialog shareDialog = new ShareDialog(mContext);
+					shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+						@Override
+						public void onCancel() {
+							Log.d(LOG_TAG, "share() onCancel");
+							ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
+						}
+						@Override
+						public void onError(FacebookException facebookException) {
+							Log.d(LOG_TAG, "share() onError", facebookException);
+							ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+						}
+						@Override
+						public void onSuccess(Result result) {
+							Log.d(LOG_TAG, "share() onSuccess " + result.getPostId());
+							ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+						}
+					});
+					if(ShareDialog.canShow(ShareLinkContent.class) || true) {
+						Log.d(LOG_TAG, "share link");
+						ShareLinkContent linkContent = new ShareLinkContent.Builder()
+							.setContentDescription(text)
+							.setContentTitle(caption)
+							.setContentUrl(Uri.parse(url))
+							.setImageUrl(Uri.parse(picture))
+							.build();
+						Log.d(LOG_TAG, "shareDialog.show(linkContent)");
+						shareDialog.show(linkContent);
+					} else {
+						Log.d(LOG_TAG, "ShareDialog.canShow(ShareLinkContent.class) return  false");
+					}
 				}
 			});
 		}		
@@ -124,7 +145,7 @@ public class ShareFacebook implements InterfaceShare{
 
 	@Override
 	public String getSDKVersion() {
-		return Settings.getSdkVersion();
+		return FacebookSdk.getSdkVersion();
 	}
 
 	public void setSDKVersion(String version){
@@ -148,27 +169,27 @@ public class ShareFacebook implements InterfaceShare{
 		try {
 			String dialogType = cpInfo.getString("dialog");
 			if("shareLink".equals(dialogType)){
-				return FacebookDialog.canPresentShareDialog(mContext, ShareDialogFeature.SHARE_DIALOG);
+				return ShareDialog.canShow(ShareLinkContent.class);
 			}
 			else if("shareOpenGraph".equals(dialogType)){
-				return FacebookDialog.canPresentOpenGraphActionDialog(mContext, OpenGraphActionDialogFeature.OG_ACTION_DIALOG);
+				return ShareDialog.canShow(ShareOpenGraphContent.class);
 				
 			}
 			else if("sharePhoto".equals(dialogType)){
-				return FacebookDialog.canPresentShareDialog(mContext, ShareDialogFeature.PHOTOS);
+				return ShareDialog.canShow(SharePhotoContent.class);
 				
 			}
 			else if("apprequests".equals(dialogType)){
-				return true;
+				return GameRequestDialog.canShow();
 			}
 			else if("messageLink".equals(dialogType)){
-				return FacebookDialog.canPresentMessageDialog(mContext, MessageDialogFeature.MESSAGE_DIALOG);
+				return ShareDialog.canShow(ShareFeedContent.class);
 			}
 			else if("messageOpenGraph".equals(dialogType)){
-				return FacebookDialog.canPresentOpenGraphMessageDialog(mContext, OpenGraphMessageDialogFeature.OG_MESSAGE_DIALOG);
+				return ShareDialog.canShow(ShareOpenGraphContent.class);
 			}
 			else if("messagePhoto".equals(dialogType)){
-				return FacebookDialog.canPresentMessageDialog(mContext, MessageDialogFeature.PHOTOS);
+				return ShareDialog.canShow(SharePhotoContent.class);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -186,7 +207,7 @@ public class ShareFacebook implements InterfaceShare{
 						WebFeedDialog(cpInfo);
 					}
 					else if("shareOpenGraph".equals(dialogType)){
-						WebShareOpenGraphDialog(cpInfo);
+						WebFeedDialog(cpInfo);
 					}
 					else {
 						String errMsgString = "{\"error_message\" : \"do not support this type!\"}";
@@ -207,6 +228,7 @@ public class ShareFacebook implements InterfaceShare{
 			public void run() {
 				try {
 					String dialogType = cpInfo.getString("dialog");
+					Log.d(LOG_TAG, "dialog " + dialogType);
 					if("shareLink".equals(dialogType)){
 						FBShareDialog(cpInfo);
 					}
@@ -243,15 +265,44 @@ public class ShareFacebook implements InterfaceShare{
 		String type = info.has("action_type")?info.getString("action_type"):info.getString("actionType");
 		String previewProperty = info.has("preview_property_name")?info.getString("preview_property_name"):info.getString("previewPropertyName");
 
-		OpenGraphObject obj = OpenGraphObject.Factory.createForPost(OpenGraphObject.class, type, info.getString("title"),
-                        info.getString("image"), info.getString("url"),
-                        info.getString("description"));
-        OpenGraphAction action = GraphObject.Factory.create(OpenGraphAction.class);
-        action.setProperty(previewProperty, obj);
-        action.setType(type);
-        //action.setType(type);
-        FacebookDialog shareDialog = new FacebookDialog.OpenGraphActionDialogBuilder(mContext, action, previewProperty).build();
-        FacebookWrapper.track(shareDialog.present());
+		ShareDialog shareDialog = new ShareDialog(mContext);
+		shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onCancel() {
+				Log.d(LOG_TAG, "FBShareOpenGraphDialog() onCancel");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
+			}
+			@Override
+			public void onError(FacebookException facebookException) {
+				Log.d(LOG_TAG, "FBShareOpenGraphDialog() onError", facebookException);
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+			}
+			@Override
+			public void onSuccess(Result result) {
+				Log.d(LOG_TAG, "FBShareOpenGraphDialog() onSuccess " + result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+			}
+		});
+		if(ShareDialog.canShow(ShareOpenGraphContent.class) || true) {
+			Log.d(LOG_TAG, "share ShareOpenGraphContent");
+			ShareOpenGraphContent ogContent = new ShareOpenGraphContent.Builder()
+				.setAction(
+						new ShareOpenGraphAction.Builder()
+							.setActionType(type)
+							.putPhoto("image",
+									new SharePhoto.Builder()
+										.setImageUrl(Uri.parse(info.getString("image")))
+										.build())
+							.putString("description", info.getString("description"))
+							.build())
+				.setPreviewPropertyName(previewProperty)
+				.setContentUrl(Uri.parse(info.getString("url")))
+				.build();
+			Log.d(LOG_TAG, "shareDialog.show(ogContent)");
+			shareDialog.show(ogContent);
+		} else {
+			Log.d(LOG_TAG, "ShareDialog.canShow(ShareOpenGraphContent.class) return false");
+		}
 	}
 	
 	private void FBSharePhotoDialog(JSONObject info) throws JSONException{
@@ -261,13 +312,37 @@ public class ShareFacebook implements InterfaceShare{
 			return;
 		}
 		
-		File file = new File(filepath);
-		//Bitmap image = BitmapFactory.decodeFile(cpInfo.getString("photos"));
-		FacebookDialog dialog = new FacebookDialog.PhotoShareDialogBuilder(mContext)
-									.addPhotoFiles(Arrays.asList(file))	
-									//.addPhotos(Arrays.asList(image))
-									.build();
-		FacebookWrapper.track(dialog.present());
+		ShareDialog shareDialog = new ShareDialog(mContext);
+		shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onCancel() {
+				Log.d(LOG_TAG, "FBSharePhotoDialog() onCancel");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
+			}
+			@Override
+			public void onError(FacebookException facebookException) {
+				Log.d(LOG_TAG, "FBSharePhotoDialog() onError", facebookException);
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+			}
+			@Override
+			public void onSuccess(Result result) {
+				Log.d(LOG_TAG, "FBSharePhotoDialog() onSuccess " + result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+			}
+		});
+		if(ShareDialog.canShow(SharePhotoContent.class) || true) {
+			Log.d(LOG_TAG, "share photo " + filepath);
+			File file = new File(filepath);
+			SharePhotoContent photoContent = new SharePhotoContent.Builder()
+						.addPhoto(new SharePhoto.Builder()
+							.setImageUrl(Uri.fromFile(file))
+							.build())
+						.build();
+			Log.d(LOG_TAG, "shareDialog.show(photoContent)");
+			shareDialog.show(photoContent);
+		} else {
+			Log.d(LOG_TAG, "ShareDialog.canShow(SharePhotoContent.class) return false");
+		}
 	}
 	public void appRequest(final JSONObject info){
 		PluginWrapper.runOnMainThread(new Runnable(){
@@ -279,74 +354,93 @@ public class ShareFacebook implements InterfaceShare{
 				}catch(JSONException e){
 					e.printStackTrace();
 				}
-				
 			}
-			
 		});
 	}
 	
 	private void WebRequestDialog(JSONObject info) throws JSONException{
-		String message = null;
-		String app_id = null;
-		RequestsDialogBuilder requestDialogBuilder = new WebDialog.RequestsDialogBuilder(mContext);
-		// some property need to add
+//		if(info.has("appLinkUrl")) {
+//			if (AppInviteDialog.canShow()) {
+//				AppInviteContent.Builder builder = new AppInviteContent.Builder();
+//				builder.setApplinkUrl(safeGetJsonString(info, "appLinkUrl"));
+//				if(info.has("previewImageUrl")) {
+//					builder.setPreviewImageUrl(safeGetJsonString(info, "previewImageUrl"));
+//				}
+//				
+//				AppInviteContent content = builder.build();
+//				AppInviteDialog dialog = new AppInviteDialog(mContext);
+//				dialog.registerCallback(FacebookWrapper.callbackManager, callback);
+//				return;
+//			}
+//		}
 		
+		String message;
 		if ((message = safeGetJsonString(info, "message")) == null)
 		{
 			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \" need to add property 'message' \"}");
 			return;
 		}
-		
-		requestDialogBuilder.setMessage(message);
-		
-		// some property can be choose
-		String to = null;
-		if ((to = safeGetJsonString(info, "to")) != null)
-			requestDialogBuilder.setTo(to);
-		
-		String title = null;
-		if ((title = safeGetJsonString(info, "title")) != null)
-			requestDialogBuilder.setTitle(title);
-		
-		String data = null;
-		if ((data = safeGetJsonString(info, "data")) != null)
-			requestDialogBuilder.setData(data);
-		
-		requestDialogBuilder.setOnCompleteListener(new OnCompleteListener(){
+		String strActionType = safeGetJsonString(info, "action_type");
+		ActionType actionType = null;
+		if(strActionType != null && strActionType.trim().length() > 0) {
+			actionType = ActionType.valueOf(strActionType);
+		}
+		String to = safeGetJsonString(info, "to");
+		String[] toIds = to.split(",");
+		if(toIds.length == 1 && to.length() > 15) {
+			toIds = to.split(" ");
+		}
+		List<String> toList = new ArrayList<String>();
+		for(int i = 0; i < toIds.length; i++) {
+			toList.add(toIds[i]);
+		}
+		GameRequestContent requestContent = new GameRequestContent.Builder()
+			.setActionType(actionType)
+			.setMessage(message)
+			.setRecipients(toList)
+			.setTitle(safeGetJsonString(info, "title"))
+			.setData(safeGetJsonString(info, "data"))
+			.build();
+		GameRequestDialog requestDialog = new GameRequestDialog(mContext);
+		requestDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<GameRequestDialog.Result>() {
 			@Override
-			public void onComplete(Bundle values,	FacebookException error) {
-				if(null != error){
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("{\"error_message\":\"")
-						.append(error.getMessage())
-						.append("\"}");
-					
-					ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, buffer.toString());
-				}else{
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("{\"request\":\"");
-					buffer.append(values.getString("request"));
-					buffer.append("\", \"to\":[");
-					
-					Set<String> keys = values.keySet();
-					Iterator<String> it = keys.iterator();
-					while(it.hasNext()){
-						String key = it.next();
-						if(!"request".equals(key)){
-							buffer.append("\"");
-							buffer.append(values.getString(key));
-							buffer.append("\",");
-						}
+			public void onCancel() {
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("{\"error_message\":\"")
+					.append("canceled")
+					.append("\"}");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, buffer.toString());
+			}
+			@Override
+			public void onError(FacebookException error) {
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("{\"error_message\":\"")
+					.append(error.getMessage())
+					.append("\"}");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, buffer.toString());
+			}
+			@Override
+			public void onSuccess(com.facebook.share.widget.GameRequestDialog.Result result) {
+				
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("{\"request\":\"");
+				buffer.append(result.getRequestId());
+				buffer.append("\", \"to\":[");
+				Iterator<String> it = result.getRequestRecipients().iterator();
+				while(it.hasNext()){
+					String key = it.next();
+					buffer.append("\"");
+					buffer.append(key);
+					buffer.append("\"");
+					if(it.hasNext()) {
+						buffer.append(",");
 					}
-					//remove the last ,
-					buffer.deleteCharAt(buffer.length() - 1);
-					buffer.append("]}");
-					
-					ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, buffer.toString());
 				}
+				buffer.append("]}");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, buffer.toString());
 			}
 		});
-		requestDialogBuilder.build().show();
+		requestDialog.show(requestContent);
 	}
 	
 	private String safeGetJsonString(JSONObject info, String key) {
@@ -359,7 +453,6 @@ public class ShareFacebook implements InterfaceShare{
 	
 	private void FBShareDialog(JSONObject info) throws JSONException{
 		String link = null;
-		
 		// some property need to add
 		if ((link = safeGetJsonString(info, "link")) == null)
 		{
@@ -367,52 +460,78 @@ public class ShareFacebook implements InterfaceShare{
 			return;
 		}
 		
-		ShareDialogBuilder shareDialogBuilder = new FacebookDialog.ShareDialogBuilder(mContext);
-		shareDialogBuilder.setLink(link);
-		
-		// some property can be choose
-		String name = null;
-		if ((name = safeGetJsonString(info, "name")) != null)
-			shareDialogBuilder.setName(name);
-		
-		String caption = null;
-		if ((caption = safeGetJsonString(info, "caption")) != null)
-			shareDialogBuilder.setCaption(caption);
-		
-		String description = null;
-		if ((description = safeGetJsonString(info, "description")) != null)
-			shareDialogBuilder.setDescription(description);
-		
-		String picture = null;
-		if ((picture = safeGetJsonString(info, "picture")) != null)
-			shareDialogBuilder.setPicture(picture);
-		
-		String friendStr = null;
-		if ((friendStr = safeGetJsonString(info, "to")) != null)
-		{
-			String []arr = friendStr.split(",");
-			List<String> list=Arrays.asList(arr); 
-			shareDialogBuilder.setFriends(list);
+		ShareDialog shareDialog = new ShareDialog(mContext);
+		shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onCancel() {
+				Log.d(LOG_TAG, "FBShareDialog() onCancel");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
+			}
+			@Override
+			public void onError(FacebookException facebookException) {
+				Log.d(LOG_TAG, "FBShareDialog() onError", facebookException);
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+			}
+			@Override
+			public void onSuccess(Result result) {
+				Log.d(LOG_TAG, "FBShareDialog() onSuccess " + result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+			}
+		});
+		if(ShareDialog.canShow(ShareFeedContent.class) || true) {
+			ShareFeedContent.Builder builder = new ShareFeedContent.Builder();
+			builder.setLink(link);
+			
+			// some property can be choose
+			String name = null;
+			if ((name = safeGetJsonString(info, "name")) != null)
+				builder.setLinkName(name);
+			
+			String caption = null;
+			if ((caption = safeGetJsonString(info, "caption")) != null)
+				builder.setLinkCaption(caption);
+			
+			String description = null;
+			if ((description = safeGetJsonString(info, "description")) != null)
+				builder.setLinkDescription(description);
+			
+			String picture = null;
+			if ((picture = safeGetJsonString(info, "picture")) != null)
+				builder.setPicture(picture);
+			
+			String friendStr = null;
+			if ((friendStr = safeGetJsonString(info, "to")) != null)
+			{
+				builder.setToId(friendStr);
+			}
+			
+			String place = null;
+			if ((place = safeGetJsonString(info, "place")) != null)
+			{
+				builder.setPlaceId(place);
+			}
+			
+			String ref = null;
+			if ((ref = safeGetJsonString(info, "reference")) != null)
+			{
+				builder.setRef(ref);
+			}
+			String mediaSource = null;
+			if ((mediaSource = safeGetJsonString(info, "media_source")) != null)
+			{
+				builder.setMediaSource(mediaSource);
+			}
+			
+			ShareFeedContent feedContent = builder.build();
+			Log.d(LOG_TAG, "shareDialog.show(feedContent)");
+			shareDialog.show(feedContent);
+		} else {
+			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
 		}
-		
-		String place = null;
-		if ((place = safeGetJsonString(info, "place")) != null)
-		{
-			shareDialogBuilder.setPlace(place);
-		}
-		
-		String ref = null;
-		if ((ref = safeGetJsonString(info, "reference")) != null)
-		{
-			shareDialogBuilder.setRef(ref);
-		}
-		
-		FacebookWrapper.track(shareDialogBuilder.build().present());
 	}
 	
 	private void WebFeedDialog(JSONObject info) throws JSONException{
 		String link = null;
-		
 		// some property need to add
 		if ((link = safeGetJsonString(info, "link")) == null)
 		{
@@ -420,139 +539,89 @@ public class ShareFacebook implements InterfaceShare{
 			return;
 		}
 		
-		FeedDialogBuilder feedDialogBuilder = new WebDialog.FeedDialogBuilder(mContext);
-		feedDialogBuilder.setLink(link);
-		feedDialogBuilder.setOnCompleteListener(new OnCompleteListener(){
-				@Override
-				public void onComplete(Bundle arg0,
-						FacebookException arg1) {
-					if(arg1 == null) {
-						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "share success");
-					} else if(arg1 instanceof FacebookOperationCanceledException) {
-						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
-					} else {
-						ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
-					}
-					
-				}
+		ShareDialog shareDialog = new ShareDialog(mContext);
+		shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onCancel() {
+				Log.d(LOG_TAG, "WebFeedDialog() onCancel");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"canceled\"}");
 			}
-		);
-		
-		// some property can be choose
-		String name = null;
-		if ((name = safeGetJsonString(info, "name")) != null)
-			feedDialogBuilder.setName(name);
-		
-		String caption = null;
-		if ((caption = safeGetJsonString(info, "caption")) != null)
-			feedDialogBuilder.setCaption(caption);
-		
-		String description = null;
-		if ((description = safeGetJsonString(info, "description")) != null)
-			feedDialogBuilder.setDescription(description);
-		
-		String picture = null;
-		if ((picture = safeGetJsonString(info, "picture")) != null)
-			feedDialogBuilder.setPicture(picture);
-
-		String media_source = null;
-		if ((media_source = safeGetJsonString(info, "media_source")) != null)
-			feedDialogBuilder.setSource(media_source);
-
-		String to = null;
-		if ((to = safeGetJsonString(info, "to")) != null)
-			feedDialogBuilder.setTo(to);
-		
-		feedDialogBuilder.build().show();
+			@Override
+			public void onError(FacebookException facebookException) {
+				Log.d(LOG_TAG, "WebFeedDialog() onError", facebookException);
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"share failed\"}");
+			}
+			@Override
+			public void onSuccess(Result result) {
+				Log.d(LOG_TAG, "WebFeedDialog() onSuccess " + result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+			}
+		});
+		if(ShareDialog.canShow(ShareFeedContent.class) || true) {
+			ShareFeedContent.Builder builder = new ShareFeedContent.Builder();
+			builder.setLink(link);
+			
+			// some property can be choose
+			String name = null;
+			if ((name = safeGetJsonString(info, "name")) != null)
+				builder.setLinkName(name);
+			
+			String caption = null;
+			if ((caption = safeGetJsonString(info, "caption")) != null)
+				builder.setLinkCaption(caption);
+			
+			String description = null;
+			if ((description = safeGetJsonString(info, "description")) != null)
+				builder.setLinkDescription(description);
+			
+			String picture = null;
+			if ((picture = safeGetJsonString(info, "picture")) != null)
+				builder.setPicture(picture);
+			
+			String friendStr = null;
+			if ((friendStr = safeGetJsonString(info, "to")) != null)
+			{
+				builder.setToId(friendStr);
+			}
+			
+			String place = null;
+			if ((place = safeGetJsonString(info, "place")) != null)
+			{
+				builder.setPlaceId(place);
+			}
+			
+			String ref = null;
+			if ((ref = safeGetJsonString(info, "reference")) != null)
+			{
+				builder.setRef(ref);
+			}
+			String mediaSource = null;
+			if ((mediaSource = safeGetJsonString(info, "media_source")) != null)
+			{
+				builder.setMediaSource(mediaSource);
+			}
+			
+			ShareFeedContent feedContent = builder.build();
+			Log.d(LOG_TAG, "shareDialog.show(feedContent)");
+			shareDialog.show(feedContent);
+		} else {
+			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
+		}
 	}
 	
-	private void WebShareOpenGraphDialog(JSONObject info) throws JSONException{
-		String caption = info.has("title")?info.getString("title"):info.getString("caption");
-		String link = info.has("siteUrl")?info.getString("siteUrl"):info.getString("url");
-		String description = info.has("text")?info.getString("text"):info.getString("description");
-		String picture = info.has("imageUrl")?info.getString("imageUrl"):info.getString("image");
-		
-		WebDialog dialog = new WebDialog.FeedDialogBuilder(mContext)
-								.setCaption(caption)
-								.setLink(link)
-								.setDescription(description)
-								.setPicture(picture)
-								//.setTo(info.getString("to"))
-								.setOnCompleteListener(new OnCompleteListener(){
-
-									@Override
-									public void onComplete(Bundle arg0,
-											FacebookException arg1) {
-										ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "share success");
-										
-									}})
-								.build();
-		dialog.show();
-		//WebDialog dialog = new WebDialog.WebDialog(mContext).build();
-	}
 	
 	private void FBMessageDialog(JSONObject info) throws JSONException{
-		String caption = info.has("title")?info.getString("title"):info.getString("caption");
-		String link = info.has("siteUrl")?info.getString("siteUrl"):info.getString("link");
-		String description = info.has("text")?info.getString("text"):info.getString("description");
-		String picture = info.has("imageUrl")?info.getString("imageUrl"):info.getString("picture");
-		
-		//String name = info.getString("site");
-		
-		FacebookDialog dialog = new FacebookDialog.MessageDialogBuilder(mContext)
-				.setCaption(caption)
-				.setLink(link)
-				//.setName(name)
-				.setDescription(description)
-				.setPicture(picture)
-		    	.build();
-		FacebookWrapper.track(dialog.present());
+		FBShareDialog(info);
 	}
 	
 	
 
 	private void FBMessageOpenGraphDialog(JSONObject info) throws JSONException{
-		String type = info.has("action_type")?info.getString("action_type"):info.getString("actionType");
-		String previewProperty = info.has("preview_property_name")?info.getString("preview_property_name"):info.getString("previewPropertyName");
-	
-		OpenGraphObject obj = OpenGraphObject.Factory.createForPost(OpenGraphObject.class, type, info.getString("title"),
-                        info.getString("image"), info.getString("url"),
-                        info.getString("description"));
-        OpenGraphAction action = GraphObject.Factory.create(OpenGraphAction.class);
-        action.setType(type);
-        action.setProperty(previewProperty, obj);
-        
-		FacebookDialog dialog = new FacebookDialog.OpenGraphMessageDialogBuilder(mContext, action, previewProperty)
-				.build();
-		FacebookWrapper.track(dialog.present());
+		FBShareOpenGraphDialog(info);
 	}
 	
 	private void FBMessagePhotoDialog(JSONObject info) throws JSONException{
-		String filepath = info.getString("photo");
-		if("".equals(filepath)){
-			LogD("Must specify one photo");
-			return;
-		}
-		
-		File file = new File(filepath);
-		
-		FacebookDialog dialog = new FacebookDialog.PhotoMessageDialogBuilder(mContext)
-									.addPhotoFiles(Arrays.asList(file))
-									.build();
-		FacebookWrapper.track(dialog.present());
+		FBSharePhotoDialog(info);
 	}
-	
-	private class FacebookDialogCallback implements FacebookDialog.Callback{
 
-		@Override
-		public void onComplete(PendingCall arg0, Bundle arg1) {
-			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"didComplete\":true}");			
-		}
-
-		@Override
-		public void onError(PendingCall arg0, Exception arg1, Bundle arg2) {
-			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"" + arg1.getMessage() + "\"}");			
-		}
-		
-	}
 }
