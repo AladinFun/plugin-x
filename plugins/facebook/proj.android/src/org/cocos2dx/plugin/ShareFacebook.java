@@ -112,7 +112,7 @@ public class ShareFacebook implements InterfaceShare{
 						@Override
 						public void onSuccess(Result result) {
 							Log.d(LOG_TAG, "share() onSuccess " + result.getPostId());
-							ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+							ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"id\":\"" + result.getPostId() + "\"}");
 						}
 					});
 					if(ShareDialog.canShow(ShareLinkContent.class) || true) {
@@ -280,7 +280,7 @@ public class ShareFacebook implements InterfaceShare{
 			@Override
 			public void onSuccess(Result result) {
 				Log.d(LOG_TAG, "FBShareOpenGraphDialog() onSuccess " + result.getPostId());
-				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"id\":\"" + result.getPostId() + "\"}");
 			}
 		});
 		if(ShareDialog.canShow(ShareOpenGraphContent.class) || true) {
@@ -327,7 +327,7 @@ public class ShareFacebook implements InterfaceShare{
 			@Override
 			public void onSuccess(Result result) {
 				Log.d(LOG_TAG, "FBSharePhotoDialog() onSuccess " + result.getPostId());
-				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"id\":\"" + result.getPostId() + "\"}");
 			}
 		});
 		if(ShareDialog.canShow(SharePhotoContent.class) || true) {
@@ -475,7 +475,7 @@ public class ShareFacebook implements InterfaceShare{
 			@Override
 			public void onSuccess(Result result) {
 				Log.d(LOG_TAG, "FBShareDialog() onSuccess " + result.getPostId());
-				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"id\":\"" + result.getPostId() + "\"}");
 			}
 		});
 		if(ShareDialog.canShow(ShareFeedContent.class) || true) {
@@ -554,7 +554,7 @@ public class ShareFacebook implements InterfaceShare{
 			@Override
 			public void onSuccess(Result result) {
 				Log.d(LOG_TAG, "WebFeedDialog() onSuccess " + result.getPostId());
-				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"id\":\"" + result.getPostId() + "\"}");
 			}
 		});
 		if(ShareDialog.canShow(ShareFeedContent.class) || true) {
