@@ -122,7 +122,7 @@ public class FacebookWrapper {
 		AccessToken accessToken = AccessToken.getCurrentAccessToken();
 		Activity ctx = (Activity) BaseEntryActivity.getContext();
 		if(userFacebook != null) {
-			if(accessToken == null) {
+			if(accessToken == null || accessToken.isExpired() || accessToken.getToken() == null || accessToken.getToken().trim().length() == 0) {
 				Log.d(TAG, "login with read permission:" + Arrays.toString(userFacebook.requestedReadPermissions.toArray()));
 				LoginManager.getInstance().logInWithReadPermissions(ctx, userFacebook.requestedReadPermissions);
 			} else {
@@ -200,7 +200,8 @@ public class FacebookWrapper {
 		if(!profileTracker.isTracking()) {
 			profileTracker.startTracking();
 		}
-		isLoggedIn = (AccessToken.getCurrentAccessToken() != null);
+		
+		isFacebookLogined();
 		Uri targetUrl = AppLinks.getTargetUrlFromInboundIntent(activity, activity.getIntent());
 		if (targetUrl != null) {
 			linkString = targetUrl.toString();
@@ -223,6 +224,13 @@ public class FacebookWrapper {
 				}
 			});
 		}
+	}
+	
+	public static boolean isFacebookLogined() {
+		Profile.getCurrentProfile();
+		AccessToken accessToken = AccessToken.getCurrentAccessToken();
+		isLoggedIn = (accessToken != null && !accessToken.isExpired() && accessToken.getToken() != null && accessToken.getToken().trim().length() > 0);
+		return isLoggedIn;
 	}
 	
 	public static void onPause(Activity activity) {
