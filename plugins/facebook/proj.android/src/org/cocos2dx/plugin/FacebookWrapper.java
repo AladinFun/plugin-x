@@ -19,6 +19,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.FacebookSdk.InitializeCallback;
 import com.facebook.LoggingBehavior;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
@@ -65,7 +66,11 @@ public class FacebookWrapper {
 		@Override
 		public void onSuccess(LoginResult loginResult) {
 			Log.d(TAG, "loginCallback.onSuccess");
-			String accessTokenMsg = getAccessTokenMessage(loginResult.getAccessToken());
+			AccessToken accessToken = loginResult.getAccessToken();
+			if(accessToken != null) {
+				AccessToken.setCurrentAccessToken(accessToken);
+			}
+			String accessTokenMsg = getAccessTokenMessage(accessToken);
 			Log.d(TAG, "accessToken " + accessTokenMsg);
 			if(isLoginRequested) {
 				if(!requestUserPermissions()) {
@@ -85,7 +90,7 @@ public class FacebookWrapper {
         @Override
         protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
         	Log.d(TAG, "onCurrentAccessTokenChanged old_access_token:" + getAccessTokenMessage(oldAccessToken));
-        	Log.d(TAG, "onCurrentAccessTokenChanged new_access_token:" + getAccessTokenMessage(oldAccessToken));
+        	Log.d(TAG, "onCurrentAccessTokenChanged new_access_token:" + getAccessTokenMessage(currentAccessToken));
         }
     };
     static ProfileTracker profileTracker;
@@ -186,7 +191,12 @@ public class FacebookWrapper {
 		FacebookSdk.setIsDebugEnabled(true);
 		FacebookSdk.addLoggingBehavior(LoggingBehavior.REQUESTS);
 		FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
-		FacebookSdk.sdkInitialize(activity.getApplicationContext());
+		FacebookSdk.sdkInitialize(activity.getApplicationContext(), new InitializeCallback() {
+			@Override
+			public void onInitialized() {
+				isFacebookLogined();
+			}
+		});
 		appEventsLogger = AppEventsLogger.newLogger(activity);
 		callbackManager = CallbackManager.Factory.create();
 		loginCallback = new MyLoginCallback();
