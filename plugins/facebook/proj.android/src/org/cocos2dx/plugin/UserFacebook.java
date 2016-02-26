@@ -42,6 +42,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.aladinfun.nativeutil.BaseEntryActivity;
 import com.facebook.AccessToken;
 import com.facebook.FacebookRequestError;
 import com.facebook.FacebookSdk;
