@@ -42,12 +42,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.aladinfun.nativeutil.BaseEntryActivity;
 import com.facebook.AccessToken;
 import com.facebook.FacebookRequestError;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 
@@ -199,6 +199,10 @@ public class UserFacebook implements InterfaceUser{
             public void run() {
                 try {
                     String path = info.getString("Param1");
+                    
+                    int method = info.getInt("Param2");
+                    HttpMethod httpMethod = HttpMethod.values()[method];
+                    
                     JSONObject jsonParameters = info.getJSONObject("Param3");
                     Bundle parameter = new Bundle();
                     Iterator<?> it = jsonParameters.keys();
@@ -237,6 +241,7 @@ public class UserFacebook implements InterfaceUser{
 							}
 						}
 					});
+                    request.setHttpMethod(httpMethod);
                     request.setParameters(parameter);
                     request.executeAsync();
                 } catch (JSONException e) {
