@@ -7,25 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		041FF74C1D30DFBE0069FD31 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF7471D30DFBE0069FD31 /* Bolts.framework */; };
+		041FF74D1D30DFBE0069FD31 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF7491D30DFBE0069FD31 /* FBSDKCoreKit.framework */; };
+		041FF74E1D30DFBE0069FD31 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF74A1D30DFBE0069FD31 /* FBSDKLoginKit.framework */; };
+		041FF74F1D30DFBE0069FD31 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF74B1D30DFBE0069FD31 /* FBSDKShareKit.framework */; };
+		041FF7501D30DFE80069FD31 /* FacebookSDKStrings.bundle in Copy Files */ = {isa = PBXBuildFile; fileRef = 041FF7481D30DFBE0069FD31 /* FacebookSDKStrings.bundle */; };
+		041FF7521D312E070069FD31 /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041FF7511D312E070069FD31 /* FBSDKMessengerShareKit.framework */; };
 		BA34A761195AA8C7002D0ECD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA34A760195AA8C7002D0ECD /* Foundation.framework */; };
 		BA34A79E195AA939002D0ECD /* ShareFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = BA34A79B195AA939002D0ECD /* ShareFacebook.m */; };
 		BA34A79F195AA939002D0ECD /* UserFacebook.m in Sources */ = {isa = PBXBuildFile; fileRef = BA34A79D195AA939002D0ECD /* UserFacebook.m */; };
-		D5F110291BCA575A001842F3 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5F110281BCA575A001842F3 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		BA34A75B195AA8C7002D0ECD /* CopyFiles */ = {
+		BA34A75B195AA8C7002D0ECD /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				041FF7501D30DFE80069FD31 /* FacebookSDKStrings.bundle in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		041FF7471D30DFBE0069FD31 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		041FF7481D30DFBE0069FD31 /* FacebookSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FacebookSDKStrings.bundle; sourceTree = "<group>"; };
+		041FF7491D30DFBE0069FD31 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		041FF74A1D30DFBE0069FD31 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		041FF74B1D30DFBE0069FD31 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		041FF7511D312E070069FD31 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKMessengerShareKit.framework; sourceTree = "<group>"; };
 		BA34A75D195AA8C7002D0ECD /* libPluginFacebook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPluginFacebook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA34A760195AA8C7002D0ECD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BA34A764195AA8C7002D0ECD /* PluginFacebook-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PluginFacebook-Prefix.pch"; sourceTree = "<group>"; };
@@ -33,7 +46,6 @@
 		BA34A79B195AA939002D0ECD /* ShareFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareFacebook.m; sourceTree = "<group>"; };
 		BA34A79C195AA939002D0ECD /* UserFacebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserFacebook.h; sourceTree = "<group>"; };
 		BA34A79D195AA939002D0ECD /* UserFacebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserFacebook.m; sourceTree = "<group>"; };
-		D5F110281BCA575A001842F3 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,8 +53,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5F110291BCA575A001842F3 /* FacebookSDK.framework in Frameworks */,
 				BA34A761195AA8C7002D0ECD /* Foundation.framework in Frameworks */,
+				041FF74D1D30DFBE0069FD31 /* FBSDKCoreKit.framework in Frameworks */,
+				041FF74F1D30DFBE0069FD31 /* FBSDKShareKit.framework in Frameworks */,
+				041FF74E1D30DFBE0069FD31 /* FBSDKLoginKit.framework in Frameworks */,
+				041FF7521D312E070069FD31 /* FBSDKMessengerShareKit.framework in Frameworks */,
+				041FF74C1D30DFBE0069FD31 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,8 +85,13 @@
 		BA34A75F195AA8C7002D0ECD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D5F110281BCA575A001842F3 /* FacebookSDK.framework */,
+				041FF7471D30DFBE0069FD31 /* Bolts.framework */,
+				041FF7481D30DFBE0069FD31 /* FacebookSDKStrings.bundle */,
+				041FF7491D30DFBE0069FD31 /* FBSDKCoreKit.framework */,
+				041FF74A1D30DFBE0069FD31 /* FBSDKLoginKit.framework */,
+				041FF74B1D30DFBE0069FD31 /* FBSDKShareKit.framework */,
 				BA34A760195AA8C7002D0ECD /* Foundation.framework */,
+				041FF7511D312E070069FD31 /* FBSDKMessengerShareKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -104,7 +125,7 @@
 			buildPhases = (
 				BA34A759195AA8C7002D0ECD /* Sources */,
 				BA34A75A195AA8C7002D0ECD /* Frameworks */,
-				BA34A75B195AA8C7002D0ECD /* CopyFiles */,
+				BA34A75B195AA8C7002D0ECD /* Copy Files */,
 			);
 			buildRules = (
 			);
