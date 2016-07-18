@@ -359,7 +359,16 @@
 }
 
 - (void)gameRequestDialog:(FBSDKGameRequestDialog *)gameRequestDialog didCompleteWithResults:(NSDictionary *)results {
-    NSString *msg = [ParseUtils NSDictionaryToNSString:results];
+    NSMutableArray* toArr = [[NSMutableArray alloc] init];
+    NSArray* keyArr = results.allKeys;
+    for(size_t i = 0; i < keyArr.count; i++) {
+        NSString* key = [keyArr objectAtIndex:i];
+        NSString* val = [results objectForKey:key];
+        [toArr addObject:val];
+    }
+    NSMutableDictionary* dic = [[NSMutableDictionary alloc] init];
+    [dic setObject:toArr forKey:@"to"];
+    NSString *msg = [ParseUtils NSDictionaryToNSString:dic];
     [ShareWrapper onShareResult:self withRet:kShareSuccess withMsg:msg];
 }
 
