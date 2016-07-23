@@ -25,8 +25,17 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "IAPWrapper.h"
-@interface IOSIAP : NSObject<InterfaceIAP,SKProductsRequestDelegate,SKPaymentTransactionObserver>
 
+
+@protocol IOSIAPObserver<NSObject>
+    -(void) onAddIAPPayment:(SKPayment*) payment;
+    -(void) onIAPTransactionConsumed:(SKPaymentTransaction*) transaction;
+    -(void) onIAPTransactionSucced:(SKPaymentTransaction*) transaction;
+    -(void) onProductLoaded:(NSArray*) products;
+@end
+
+@interface IOSIAP : NSObject<InterfaceIAP,SKProductsRequestDelegate,SKPaymentTransactionObserver>
++(void) addIAPObserver:(id <IOSIAPObserver>)observer;
 /**
  interface of InterfaceIAP
  **/
@@ -49,3 +58,5 @@
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions;
 @property (nonatomic,assign) BOOL _isServerMode;
 @end
+
+

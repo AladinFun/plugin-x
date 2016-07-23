@@ -7,6 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		047464681D4363E3006E151D /* FacebookAgent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 059B0A79198649F0004B06D4 /* FacebookAgent.h */; };
+		047464691D4363E3006E151D /* AgentManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = BA1BF7FE195962C400B47F4E /* AgentManager.h */; };
+		0474646A1D4363E3006E151D /* ProtocolSocial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FADBF896179E504B00F59B1D /* ProtocolSocial.h */; };
+		0474646B1D4363E3006E151D /* ProtocolUser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAD55522177D213F00968F54 /* ProtocolUser.h */; };
+		0474646C1D4363E3006E151D /* ProtocolShare.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAC2A7F41777F88700035D22 /* ProtocolShare.h */; };
+		0474646D1D4363E3006E151D /* PluginFactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAB6DF931755D7D100C90D89 /* PluginFactory.h */; };
+		0474646E1D4363E3006E151D /* PluginParam.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAB6DF941755D7D100C90D89 /* PluginParam.h */; };
+		0474646F1D4363E3006E151D /* PluginManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA09A337168ADC05008C1C7B /* PluginManager.h */; };
+		047464701D4363E3006E151D /* PluginProtocol.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA09A338168ADC05008C1C7B /* PluginProtocol.h */; };
+		047464711D4363E3006E151D /* ProtocolAds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA7C6C971724E4DD008A0ECC /* ProtocolAds.h */; };
+		047464721D4363E3006E151D /* ProtocolAnalytics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA09A339168ADC05008C1C7B /* ProtocolAnalytics.h */; };
+		047464731D4363E3006E151D /* ProtocolIAP.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA09A33A168ADC05008C1C7B /* ProtocolIAP.h */; };
+		047464751D4364C6006E151D /* IAPWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 051FF7BA192CE3CC00C43A06 /* IAPWrapper.h */; };
+		047464761D4364C6006E151D /* InterfaceSocial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FADBF897179E509500F59B1D /* InterfaceSocial.h */; };
+		047464771D4364C6006E151D /* SocialWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FADBF899179E509500F59B1D /* SocialWrapper.h */; };
+		047464781D4364C6006E151D /* InterfaceUser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAD5551C177D1FA900968F54 /* InterfaceUser.h */; };
+		047464791D4364C6006E151D /* UserWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAD5551E177D1FA900968F54 /* UserWrapper.h */; };
+		0474647A1D4364C6006E151D /* InterfaceShare.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAC2A7F51777F8C200035D22 /* InterfaceShare.h */; };
+		0474647B1D4364C6006E151D /* ShareWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAC2A7F71777F8C200035D22 /* ShareWrapper.h */; };
+		0474647C1D4364C6006E151D /* AdsWrapper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FADC44C8176EABCF00B2D5ED /* AdsWrapper.h */; };
+		0474647D1D4364C6006E151D /* PluginOCMacros.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FAB6DFCD1755EF8E00C90D89 /* PluginOCMacros.h */; };
+		0474647E1D4364C6006E151D /* InterfaceAds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA8CC21B1739E86E00464206 /* InterfaceAds.h */; };
+		0474647F1D4364C6006E151D /* InterfaceAnalytics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA8CC21C1739E86E00464206 /* InterfaceAnalytics.h */; };
+		047464801D4364C6006E151D /* InterfaceIAP.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA8CC21D1739E86E00464206 /* InterfaceIAP.h */; };
+		047464811D4364C6006E151D /* PluginUtilsIOS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FA8CC1E4173754CF00464206 /* PluginUtilsIOS.h */; };
+		047464821D4364C6006E151D /* ParseUtils.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB25161988F62000D00E8E /* ParseUtils.h */; };
 		051FF7BC192CE3CC00C43A06 /* IAPWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051FF7BB192CE3CC00C43A06 /* IAPWrapper.mm */; };
 		059B0A7E19864CE1004B06D4 /* FacebookAgent.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059B0A7D19864CE1004B06D4 /* FacebookAgent.mm */; };
 		05AB25181988F62000D00E8E /* ParseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AB25171988F62000D00E8E /* ParseUtils.m */; };
@@ -31,12 +57,47 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		047464741D4364AB006E151D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = include;
+			dstSubfolderSpec = 16;
+			files = (
+				047464751D4364C6006E151D /* IAPWrapper.h in CopyFiles */,
+				047464761D4364C6006E151D /* InterfaceSocial.h in CopyFiles */,
+				047464771D4364C6006E151D /* SocialWrapper.h in CopyFiles */,
+				047464781D4364C6006E151D /* InterfaceUser.h in CopyFiles */,
+				047464791D4364C6006E151D /* UserWrapper.h in CopyFiles */,
+				0474647A1D4364C6006E151D /* InterfaceShare.h in CopyFiles */,
+				0474647B1D4364C6006E151D /* ShareWrapper.h in CopyFiles */,
+				0474647C1D4364C6006E151D /* AdsWrapper.h in CopyFiles */,
+				0474647D1D4364C6006E151D /* PluginOCMacros.h in CopyFiles */,
+				0474647E1D4364C6006E151D /* InterfaceAds.h in CopyFiles */,
+				0474647F1D4364C6006E151D /* InterfaceAnalytics.h in CopyFiles */,
+				047464801D4364C6006E151D /* InterfaceIAP.h in CopyFiles */,
+				047464811D4364C6006E151D /* PluginUtilsIOS.h in CopyFiles */,
+				047464821D4364C6006E151D /* ParseUtils.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA09A31F168ADBC2008C1C7B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "include/${PRODUCT_NAME}";
+			dstPath = include;
 			dstSubfolderSpec = 16;
 			files = (
+				047464681D4363E3006E151D /* FacebookAgent.h in CopyFiles */,
+				047464691D4363E3006E151D /* AgentManager.h in CopyFiles */,
+				0474646A1D4363E3006E151D /* ProtocolSocial.h in CopyFiles */,
+				0474646B1D4363E3006E151D /* ProtocolUser.h in CopyFiles */,
+				0474646C1D4363E3006E151D /* ProtocolShare.h in CopyFiles */,
+				0474646D1D4363E3006E151D /* PluginFactory.h in CopyFiles */,
+				0474646E1D4363E3006E151D /* PluginParam.h in CopyFiles */,
+				0474646F1D4363E3006E151D /* PluginManager.h in CopyFiles */,
+				047464701D4363E3006E151D /* PluginProtocol.h in CopyFiles */,
+				047464711D4363E3006E151D /* ProtocolAds.h in CopyFiles */,
+				047464721D4363E3006E151D /* ProtocolAnalytics.h in CopyFiles */,
+				047464731D4363E3006E151D /* ProtocolIAP.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +265,7 @@
 				FA09A31D168ADBC2008C1C7B /* Sources */,
 				FA09A31E168ADBC2008C1C7B /* Frameworks */,
 				FA09A31F168ADBC2008C1C7B /* CopyFiles */,
+				047464741D4364AB006E151D /* CopyFiles */,
 			);
 			buildRules = (
 			);

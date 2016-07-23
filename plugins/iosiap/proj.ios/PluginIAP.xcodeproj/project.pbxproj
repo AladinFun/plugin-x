@@ -17,7 +17,7 @@
 		05A9357C19260E2E00F08DC0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
+			dstPath = include/IOSIAP;
 			dstSubfolderSpec = 16;
 			files = (
 				05A9358719260E2E00F08DC0 /* IOSIAP.h in CopyFiles */,

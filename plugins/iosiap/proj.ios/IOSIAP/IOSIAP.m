@@ -35,6 +35,14 @@ SKProductsRequest * _productsRequest;
 //productTransation
 NSArray * _transactionArray;
 
+static NSMutableArray* observers = nil;
++(void) addIAPObserver:(id <IOSIAPObserver>)observer {
+    if(!observers) {
+        observers = [[NSMutableArray alloc]init];
+    }
+    [observers addObject:observer];
+}
+
 -(void) configDeveloperInfo: (NSMutableDictionary*) cpInfo{
 }
 - (void) payForProduct: (NSMutableDictionary*) cpInfo{
@@ -44,6 +52,12 @@ NSArray * _transactionArray;
         SKMutablePayment *payment = [SKMutablePayment paymentWithProduct:skProduct];
         [[SKPaymentQueue defaultQueue] addPayment:payment];
         OUTPUT_LOG(@"add PaymentQueue");
+        if(observers) {
+            for(size_t i = 0; i < observers.count; i++) {
+                id<IOSIAPObserver> observer = observers[i];
+                [observer onAddIAPPayment:payment];
+            }
+        }
     }
 }
 - (void) setDebugMode: (BOOL) _debug{
@@ -104,6 +118,12 @@ NSArray * _transactionArray;
               skProduct.price.floatValue);
     }
     [IAPWrapper onRequestProduct:self withRet:RequestSuccees withProducts:skProducts];
+    if(observers) {
+        for(size_t i = 0; i < observers.count; i++) {
+            id<IOSIAPObserver> observer = observers[i];
+            [observer onProductLoaded:skProducts];
+        }
+    }
 }
 
 //SKPaymentTransactionObserver needed
@@ -144,6 +164,13 @@ NSArray * _transactionArray;
             }
         }
         [IAPWrapper onPayResult:self withRet:PaymentTransactionStatePurchased withMsg:receipt];
+        
+        if(observers) {
+            for(size_t i = 0; i < observers.count; i++) {
+                id<IOSIAPObserver> observer = observers[i];
+                [observer onIAPTransactionConsumed:transaction];
+            }
+        }
     }else{
         [self finishTransaction: transaction.payment.productIdentifier];
         [IAPWrapper onPayResult:self withRet:PaymentTransactionStatePurchased withMsg:@""];
@@ -180,6 +207,12 @@ NSArray * _transactionArray;
     SKPaymentTransaction *transaction = [self getTranscationByProductId:productId];
     if(transaction){
         [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    }
+    if(observers) {
+        for(size_t i = 0; i < observers.count; i++) {
+            id<IOSIAPObserver> observer = observers[i];
+            [observer onIAPTransactionSucced:transaction];
+        }
     }
 }
 -(SKPaymentTransaction *) getTranscationByProductId:(NSString *)productId{
