@@ -23,8 +23,10 @@
  ****************************************************************************/
 
 #import "InterfaceShare.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKShareKit/FBSDKShareKit.h>
 
-@interface ShareFacebook : NSObject <InterfaceShare>
+@interface ShareFacebook : NSObject <InterfaceShare, FBSDKGameRequestDialogDelegate, FBSDKSharingDelegate>
 {
     
 }

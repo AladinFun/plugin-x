@@ -64,6 +64,8 @@ using namespace cocos2d::plugin;
                     TProductInfo info;
                     [numberFormatter setLocale:product.priceLocale];
                     NSString *localizedPrice = [numberFormatter stringFromNumber:product.price];
+                    info.insert(std::make_pair("priceSymbol", [[product.priceLocale objectForKey:NSLocaleCurrencySymbol] UTF8String]));
+                    info.insert(std::make_pair("priceCode", [[product.priceLocale objectForKey:NSLocaleCurrencyCode] UTF8String]));
                     info.insert(std::make_pair("localizedPrice", std::string([localizedPrice UTF8String])));
                     info.insert(std::make_pair("productId", std::string([product.productIdentifier UTF8String])));
                     info.insert(std::make_pair("productName", std::string([product.localizedTitle UTF8String])));
