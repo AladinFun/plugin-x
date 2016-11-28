@@ -188,6 +188,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -207,7 +208,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
+				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -218,6 +219,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -239,6 +241,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PluginIAP;
 				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = all;
 				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Debug;
@@ -246,6 +250,7 @@
 		05A935A319260E2F00F08DC0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/IOSIAP.dst;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -260,6 +265,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PluginIAP;
 				SKIP_INSTALL = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = all;
 				VALID_ARCHS = "armv7 arm64 i386";
 			};
 			name = Release;
