@@ -100,7 +100,7 @@ public class UserFacebook implements InterfaceUser{
     		UserWrapper.onActionResult(this, UserWrapper.ACTION_RET_LOGIN_SUCCEED, FacebookWrapper.getAccessTokenMessage(AccessToken.getCurrentAccessToken()));
     	} else {
     		FacebookWrapper.isLoginRequested = true;
-    		LoginManager.getInstance().logInWithReadPermissions(mContext, Arrays.asList("user_friends", "email"));
+    		LoginManager.getInstance().logInWithReadPermissions(mContext, Arrays.asList("user_friends"));
     	}
     }
     
