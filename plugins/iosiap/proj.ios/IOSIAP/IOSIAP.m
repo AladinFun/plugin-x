@@ -34,6 +34,7 @@ bool _isAddObserver = false;
 SKProductsRequest * _productsRequest;
 //productTransation
 NSArray * _transactionArray;
+NSMutableDictionary* dic;
 
 static NSMutableArray* observers = nil;
 +(void) addIAPObserver:(id <IOSIAPObserver>)observer {
@@ -76,6 +77,7 @@ static NSMutableArray* observers = nil;
     _isServerMode = true;
 }
 -(void)requestProducts:(NSString*) paramMap{
+    dic = [[NSMutableDictionary alloc] init];
     [self setDebug:true];
     if(!_isAddObserver){
         [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
@@ -124,12 +126,26 @@ static NSMutableArray* observers = nil;
             [observer onProductLoaded:skProducts];
         }
     }
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+}
+
+// Sent when all transactions from the user's purchase history have successfully been added back to the queue.
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    NSLog(@"queue");
+    [self paymentQueue:queue updatedTransactions:queue.transactions];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
+{
+    NSLog(@"queue");
 }
 
 //SKPaymentTransactionObserver needed
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions{
     _transactionArray = transactions;
     for (SKPaymentTransaction * transaction in transactions) {
+        [dic setObject:transaction forKey:transaction.payment.productIdentifier];
         switch (transaction.transactionState)
         {
             case SKPaymentTransactionStatePurchased:
@@ -216,12 +232,7 @@ static NSMutableArray* observers = nil;
     }
 }
 -(SKPaymentTransaction *) getTranscationByProductId:(NSString *)productId{
-    for(SKPaymentTransaction *tran in _transactionArray){
-        if([tran.payment.productIdentifier isEqualToString:productId]){
-            return tran;
-        }
-    }
-    return NULL;
+    return [dic objectForKey:productId];
 }
 - (NSString *)encode:(const uint8_t *)input length:(NSInteger)length {
     static char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
