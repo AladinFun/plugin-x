@@ -61,17 +61,19 @@ using namespace cocos2d::plugin;
                 [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
                 [numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
                 for(SKProduct *product in products){
-                    TProductInfo info;
-                    [numberFormatter setLocale:product.priceLocale];
-                    NSString *localizedPrice = [numberFormatter stringFromNumber:product.price];
-                    info.insert(std::make_pair("priceSymbol", [[product.priceLocale objectForKey:NSLocaleCurrencySymbol] UTF8String]));
-                    info.insert(std::make_pair("priceCode", [[product.priceLocale objectForKey:NSLocaleCurrencyCode] UTF8String]));
-                    info.insert(std::make_pair("localizedPrice", std::string([localizedPrice UTF8String])));
-                    info.insert(std::make_pair("productId", std::string([product.productIdentifier UTF8String])));
-                    info.insert(std::make_pair("productName", std::string([product.localizedTitle UTF8String])));
-                    info.insert(std::make_pair("productPrice", std::string([[product.price stringValue] UTF8String])));
-                    info.insert(std::make_pair("productDesc", std::string([product.localizedDescription UTF8String])));
-                    pdlist.push_back(info);
+                    if (product.localizedTitle) {
+                        TProductInfo info;
+                        [numberFormatter setLocale:product.priceLocale];
+                        NSString *localizedPrice = [numberFormatter stringFromNumber:product.price];
+                        info.insert(std::make_pair("priceSymbol", [[product.priceLocale objectForKey:NSLocaleCurrencySymbol] UTF8String]));
+                        info.insert(std::make_pair("priceCode", [[product.priceLocale objectForKey:NSLocaleCurrencyCode] UTF8String]));
+                        info.insert(std::make_pair("localizedPrice", std::string([localizedPrice UTF8String])));
+                        info.insert(std::make_pair("productId", std::string([product.productIdentifier UTF8String])));
+                        info.insert(std::make_pair("productName", std::string([product.localizedTitle UTF8String])));
+                        info.insert(std::make_pair("productPrice", std::string([[product.price stringValue] UTF8String])));
+                        info.insert(std::make_pair("productDesc", std::string([product.localizedDescription UTF8String])));
+                        pdlist.push_back(info);
+                    }
                 }
             }
             listener->onRequestProductsResult((IAPProductRequest )ret,pdlist);
