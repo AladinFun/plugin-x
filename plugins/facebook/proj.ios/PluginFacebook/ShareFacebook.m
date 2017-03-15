@@ -265,13 +265,12 @@
             [ShareWrapper onShareResult:self withRet:kShareFail withMsg:msg];
             return;
         }
-        NSURL *photoUrl = [NSURL URLWithString:[shareInfo objectForKey:@"photo"]];
         NSString *place = [shareInfo objectForKey:@"place"];
         NSString *ref = [shareInfo objectForKey:@"reference"];
         NSString *to = [shareInfo objectForKey:@"to"];
-        UIImage *img1 = [UIImage imageWithData:[NSData dataWithContentsOfURL:photoUrl]];
+        FBSDKSharePhoto* photo = [FBSDKSharePhoto photoWithImage:img userGenerated:YES];
         FBSDKSharePhotoContent* content = [[FBSDKSharePhotoContent alloc]init];
-        content.photos = @[img1];
+        content.photos = @[photo];
         if (place) {
             content.placeID = place;
         }
@@ -284,9 +283,16 @@
         }
         
         if ([dialog_type isEqualToString:@"sharePhoto"]) {
-            [FBSDKShareDialog showFromViewController:rootViewController
-                                         withContent:content
-                                            delegate:self];
+            FBSDKShareDialog* dialog = [[FBSDKShareDialog alloc] init];
+            dialog.shareContent = content;
+            dialog.mode = FBSDKShareDialogModeNative;
+            dialog.fromViewController = rootViewController;
+            dialog.delegate = self;
+            if ([dialog canShow]) {
+                [dialog show];
+            } else {
+               not_supported = true;
+            }
         }
         else if ([dialog_type isEqualToString:@"messagePhoto"]) {
             [FBSDKMessageDialog showWithContent:content delegate:self];

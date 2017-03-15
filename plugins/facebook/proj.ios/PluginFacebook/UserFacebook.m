@@ -75,9 +75,9 @@ NSString *_accessToken = @"";
         [UserWrapper onActionResult:self withRet:kLoginSucceed withMsg:msg];
     } else if(!accessToken || [readPermissionNeeded count] > 0){
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
-//        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [loginManager logInWithReadPermissions:readPermissionNeeded
-                            //fromViewController:rootViewController
+                            fromViewController:rootViewController
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                            if (error) {
                                                OUTPUT_LOG(@"Facebook login error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -96,7 +96,7 @@ NSString *_accessToken = @"";
                                                    [UserWrapper onActionResult:self withRet:kLoginSucceed withMsg:msg];
                                                } else {
                                                    [loginManager logInWithPublishPermissions:publishPermissionNeeded
-                                                                         // fromViewController:rootViewController
+                                                                          fromViewController:rootViewController
                                                                                      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                                                                          if (error) {
                                                                                              OUTPUT_LOG(@"Facebook login error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -120,9 +120,9 @@ NSString *_accessToken = @"";
 
     } else {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
-//        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [loginManager logInWithPublishPermissions:publishPermissionNeeded
-                              // fromViewController:rootViewController
+                               fromViewController:rootViewController
                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                               if (error) {
                                                   OUTPUT_LOG(@"Facebook login error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -271,9 +271,9 @@ NSString *_accessToken = @"";
         }
     } else if([readPermissionNeeded count] > 0) {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
-//        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [loginManager logInWithReadPermissions:readPermissionNeeded
-                           // fromViewController:rootViewController
+                            fromViewController:rootViewController
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                            if (error) {
                                                OUTPUT_LOG(@"Facebook login with read permission error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -294,7 +294,7 @@ NSString *_accessToken = @"";
                                                    }
                                                } else {
                                                    [loginManager logInWithPublishPermissions:publishPermissionNeeded
-                                                                          //fromViewController:rootViewController
+                                                                          fromViewController:rootViewController
                                                                                      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                                                                          if (error) {
                                                                                              OUTPUT_LOG(@"Facebook login with publish permission error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -319,9 +319,9 @@ NSString *_accessToken = @"";
         
     } else {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
-//        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
         [loginManager logInWithPublishPermissions:publishPermissionNeeded
-                             //  fromViewController:rootViewController
+                               fromViewController:rootViewController
                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                               if (error) {
                                                   OUTPUT_LOG(@"Facebook login error:%ld %@", error.code, error.userInfo[FBSDKErrorDeveloperMessageKey]);
