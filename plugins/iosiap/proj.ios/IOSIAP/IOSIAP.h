@@ -42,6 +42,7 @@
 - (void) configDeveloperInfo: (NSMutableDictionary*) cpInfo;
 - (void) payForProduct: (NSMutableDictionary*) profuctInfo;
 - (void) setDebugMode: (BOOL) debug;
+- (void) refreshIAPReceipt;
 - (NSString*) getSDKVersion;
 - (NSString*) getPluginVersion;
 @property BOOL debug;

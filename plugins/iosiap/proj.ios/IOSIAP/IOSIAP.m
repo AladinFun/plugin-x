@@ -231,6 +231,13 @@ static NSMutableArray* observers = nil;
         }
     }
 }
+
+-(void) refreshIAPReceipt {
+    SKReceiptRefreshRequest* request = [[SKReceiptRefreshRequest alloc] init];
+    request.delegate = self;
+    [request start];
+}
+
 -(SKPaymentTransaction *) getTranscationByProductId:(NSString *)productId{
     return [dic objectForKey:productId];
 }
