@@ -126,19 +126,18 @@ static NSMutableArray* observers = nil;
             [observer onProductLoaded:skProducts];
         }
     }
-    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
 }
 
 // Sent when all transactions from the user's purchase history have successfully been added back to the queue.
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
-    NSLog(@"queue");
+    NSLog(@"Restore completed transactions finished");
     [self paymentQueue:queue updatedTransactions:queue.transactions];
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
-    NSLog(@"queue");
+    NSLog(@"Restore completed transactions failed");
 }
 
 //SKPaymentTransactionObserver needed
