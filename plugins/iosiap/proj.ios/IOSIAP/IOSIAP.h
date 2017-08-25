@@ -32,6 +32,7 @@
     -(void) onIAPTransactionConsumed:(SKPaymentTransaction*) transaction;
     -(void) onIAPTransactionSucced:(SKPaymentTransaction*) transaction;
     -(void) onProductLoaded:(NSArray*) products;
+    -(void) onRestoredCompletedTransactions:(NSArray*) transactions;
 @end
 
 @interface IOSIAP : NSObject<InterfaceIAP,SKProductsRequestDelegate,SKPaymentTransactionObserver>

@@ -133,6 +133,12 @@ static NSMutableArray* observers = nil;
 {
     NSLog(@"Restore completed transactions finished");
     [self paymentQueue:queue updatedTransactions:queue.transactions];
+    if(observers) {
+        for(size_t i = 0; i < observers.count; i++) {
+            id<IOSIAPObserver> observer = observers[i];
+            [observer onRestoredCompletedTransactions:queue.transactions];
+        }
+    }
 }
 
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
