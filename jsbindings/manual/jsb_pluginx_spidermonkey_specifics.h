@@ -197,8 +197,9 @@ void get_or_create_js_obj(JSContext* cx, JS::HandleObject obj, const std::string
             }
             
             //JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
-            
-            JSObject* js_obj = JS_NewObject(cx, typeProxy->jsclass, JS::RootedObject(cx, typeProxy->proto), JS::RootedObject(cx,typeProxy->parentProto));
+            JS::RootedObject rootedProto(cx, typeProxy->proto);
+            JS::RootedObject rootedParentProto(cx,typeProxy->parentProto);
+            JSObject* js_obj = JS_NewObject(cx, typeProxy->jsclass, rootedProto, rootedParentProto);
             proxy = jsb_new_proxy(native_obj, js_obj);
 #ifdef DEBUG
             JS::AddNamedObjectRoot(cx, &proxy->obj, typeid(*native_obj).name());

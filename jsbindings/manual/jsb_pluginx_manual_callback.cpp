@@ -24,7 +24,7 @@ public:
         JSContext* cx = s_cx;
         
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
         
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -61,7 +61,7 @@ public:
         JSContext* cx = s_cx;
         
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
         
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -164,7 +164,7 @@ bool js_pluginx_ProtocolIAP_payForProduct(JSContext *cx, uint32_t argc, jsval *v
         do {
             std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
-                JSAutoCompartment ac(cx, obj);
+                // JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
@@ -194,7 +194,7 @@ public:
     {
         JSContext* cx = s_cx;
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -220,7 +220,7 @@ public:
     {
         JSContext* cx = s_cx;
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -316,7 +316,7 @@ public:
     {
         JSContext* cx = s_cx;
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -427,7 +427,7 @@ bool js_pluginx_ProtocolShare_share(JSContext *cx, uint32_t argc, jsval *vp)
         do {
             std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
-                JSAutoCompartment ac(cx, obj);
+                // JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
@@ -456,7 +456,7 @@ public:
     {
         JSContext* cx = s_cx;
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -571,7 +571,7 @@ bool js_pluginx_ProtocolSocial_submitScore(JSContext *cx, uint32_t argc, jsval *
         do {
             std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(2)));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
-                JSAutoCompartment ac(cx, obj);
+                // JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
@@ -619,7 +619,7 @@ bool js_pluginx_ProtocolSocial_unlockAchievement(JSContext *cx, uint32_t argc, j
         do {
             std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
             auto lambda = [=](int larg0, std::string& larg1) -> void {
-                JSAutoCompartment ac(cx, obj);
+                // JSAutoCompartment ac(cx, obj);
                 jsval largv[2];
                 largv[0] = int32_to_jsval(cx, larg0);
                 largv[1] = std_string_to_jsval(cx, larg1);
@@ -648,7 +648,7 @@ public:
     {
         JSContext* cx = s_cx;
         JS::RootedObject obj(cx, _JSDelegate);
-        JSAutoCompartment ac(cx, obj);
+        // JSAutoCompartment ac(cx, obj);
 
         bool hasAction;
         JS::RootedValue retval(cx);
@@ -762,7 +762,7 @@ bool js_pluginx_ProtocolUser_login(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
@@ -806,7 +806,7 @@ bool js_pluginx_ProtocolUser_logout(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
@@ -846,7 +846,7 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(0)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
@@ -882,7 +882,7 @@ bool js_pluginx_FacebookAgent_login(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
@@ -940,7 +940,7 @@ bool js_pluginx_FacebookAgent_api(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(3)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     largv[1] = std_string_to_jsval(cx, larg1);
@@ -985,7 +985,7 @@ bool js_pluginx_FacebookAgent_appRequest(JSContext *cx, uint32_t argc, jsval *vp
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);
@@ -1036,7 +1036,7 @@ bool js_pluginx_FacebookAgent_dialog(JSContext *cx, uint32_t argc, jsval *vp)
             do {
                 std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, JS_THIS_OBJECT(cx, vp), args.get(1)));
                 auto lambda = [=](int larg0, std::string& larg1) -> void {
-                    JSAutoCompartment ac(cx, obj);
+                    // JSAutoCompartment ac(cx, obj);
                     jsval largv[2];
                     largv[0] = int32_to_jsval(cx, larg0);
                     jsval temp = std_string_to_jsval(cx, larg1);

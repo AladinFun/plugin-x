@@ -584,10 +584,10 @@ void js_register_pluginx_protocols_ProtocolAnalytics(JSContext *cx, JS::HandleOb
     };
 
     JSFunctionSpec *st_funcs = NULL;
-
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
     jsb_cocos2d_plugin_ProtocolAnalytics_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolAnalytics_class,
         empty_constructor, 0,
         properties,
@@ -722,9 +722,10 @@ void js_register_pluginx_protocols_ProtocolIAP(JSContext *cx, JS::HandleObject g
 
     JSFunctionSpec *st_funcs = NULL;
 
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
     jsb_cocos2d_plugin_ProtocolIAP_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolIAP_class,
         empty_constructor, 0,
         properties,
@@ -926,9 +927,10 @@ void js_register_pluginx_protocols_ProtocolAds(JSContext *cx, JS::HandleObject g
 
     JSFunctionSpec *st_funcs = NULL;
 
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
     jsb_cocos2d_plugin_ProtocolAds_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolAds_class,
         empty_constructor, 0,
         properties,
@@ -1063,9 +1065,10 @@ void js_register_pluginx_protocols_ProtocolShare(JSContext *cx, JS::HandleObject
 
     JSFunctionSpec *st_funcs = NULL;
 
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
     jsb_cocos2d_plugin_ProtocolShare_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolShare_class,
         empty_constructor, 0,
         properties,
@@ -1215,9 +1218,10 @@ void js_register_pluginx_protocols_ProtocolSocial(JSContext *cx, JS::HandleObjec
 
     JSFunctionSpec *st_funcs = NULL;
 
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
     jsb_cocos2d_plugin_ProtocolSocial_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolSocial_class,
         empty_constructor, 0,
         properties,
@@ -1386,9 +1390,11 @@ void js_register_pluginx_protocols_ProtocolUser(JSContext *cx, JS::HandleObject 
 
     JSFunctionSpec *st_funcs = NULL;
 
+    JS::RootedObject rootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype);
+
     jsb_cocos2d_plugin_ProtocolUser_prototype = JS_InitClass(
         cx, global,
-        JS::RootedObject(cx, jsb_cocos2d_plugin_PluginProtocol_prototype),
+        rootedObject,
         jsb_cocos2d_plugin_ProtocolUser_class,
         empty_constructor, 0,
         properties,

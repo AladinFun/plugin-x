@@ -76,7 +76,9 @@ bool js_pluginx_protocols_PluginParam_constructor(JSContext *cx, uint32_t argc, 
 			assert(typeMapIter != _js_global_type_map.end());
             typeClass = typeMapIter->second;
 			assert(typeClass);
-            obj = JS_NewObject(cx, typeClass->jsclass, JS::RootedObject(cx, typeClass->proto), JS::RootedObject(cx, typeClass->parentProto));
+            JS::RootedObject rootedProto(cx, typeClass->proto);
+            JS::RootedObject rootedParentProto(cx, typeClass->parentProto);
+            obj = JS_NewObject(cx, typeClass->jsclass, rootedProto, rootedParentProto);
 			js_proxy_t *proxy;
 			JS_NEW_PROXY(proxy, cobj, obj);
         }
