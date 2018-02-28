@@ -361,7 +361,13 @@
         content.recipients = friends;
     }
     
-    [FBSDKGameRequestDialog showWithContent:content delegate:self];
+    FBSDKGameRequestDialog *dialog = [[FBSDKGameRequestDialog alloc] init];
+    dialog.frictionlessRequestsEnabled = true;
+    dialog.content = content;
+    dialog.delegate = self;
+    [dialog show];
+    
+//    [FBSDKGameRequestDialog showWithContent:content delegate:self];
 }
 
 - (void)gameRequestDialog:(FBSDKGameRequestDialog *)gameRequestDialog didCompleteWithResults:(NSDictionary *)results {
