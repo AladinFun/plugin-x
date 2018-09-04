@@ -133,10 +133,10 @@
         NSString *desc = [shareInfo objectForKey:@"description"];
         NSString *photo = [shareInfo objectForKey:@"picture"];
         FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-        content.contentTitle = caption;
-        content.contentDescription = desc;
+//        content.contentTitle = caption;
+//        content.contentDescription = desc;
         content.contentURL = [NSURL URLWithString:link];
-        content.imageURL = [NSURL URLWithString:photo];
+//        content.imageURL = [NSURL URLWithString:photo];
         [FBSDKShareDialog showFromViewController:rootViewController
                                      withContent:content
                                         delegate:self];
@@ -196,10 +196,10 @@
         NSString *to = [shareInfo objectForKey:@"to"];
         
         FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-        content.contentTitle = name;
-        content.contentDescription = desc;
+//        content.contentTitle = name;
+//        content.contentDescription = desc;
         content.contentURL = [NSURL URLWithString:link];
-        content.imageURL = [NSURL URLWithString:photo];
+//        content.imageURL = [NSURL URLWithString:photo];
         if (place) {
             content.placeID = place;
         }
@@ -312,10 +312,10 @@
         NSString *to = [shareInfo objectForKey:@"to"];
         
         FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-        content.contentTitle = name;
-        content.contentDescription = desc;
+//        content.contentTitle = name;
+//        content.contentDescription = desc;
         content.contentURL = [NSURL URLWithString:link];
-        content.imageURL = [NSURL URLWithString:photo];
+//        content.imageURL = [NSURL URLWithString:photo];
         if (place) {
             content.placeID = place;
         }
@@ -352,6 +352,7 @@
     NSString *message = [shareInfo objectForKey:@"message"];
     NSString *title = [shareInfo objectForKey:@"title"];
     NSString *to = [shareInfo objectForKey:@"to"];
+    NSString *filters = [shareInfo objectForKey:@"filters"];
     
     FBSDKGameRequestContent* content = [[FBSDKGameRequestContent alloc] init];
     content.message = message;
@@ -359,6 +360,9 @@
     if(to){
         NSArray *friends = [to componentsSeparatedByString:@","];
         content.recipients = friends;
+    }
+    if (filters && [filters isEqualToString:@"AppNonUsers"]) {
+        content.filters = FBSDKGameRequestFilterAppNonUsers;
     }
     
     FBSDKGameRequestDialog *dialog = [[FBSDKGameRequestDialog alloc] init];

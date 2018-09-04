@@ -26,7 +26,7 @@ package org.cocos2dx.plugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -92,10 +92,10 @@ public class ShareFacebook implements InterfaceShare{
 			PluginWrapper.runOnMainThread(new Runnable() {
 				@Override
 				public void run() {
-					String caption = cpInfo.get("title");
+//					String caption = cpInfo.get("title");
 					String url = cpInfo.get("link");
-					String text = cpInfo.get("description");
-					String picture = cpInfo.get("imageUrl");
+//					String text = cpInfo.get("description");
+//					String picture = cpInfo.get("imageUrl");
 					
 					ShareDialog shareDialog = new ShareDialog(mContext);
 					shareDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -117,17 +117,21 @@ public class ShareFacebook implements InterfaceShare{
 					});
 					if(ShareDialog.canShow(ShareLinkContent.class) || true) {
 						Log.d(LOG_TAG, "share link");
+//						ShareLinkContent linkContent = new ShareLinkContent.Builder()
+//							.setContentDescription(text)
+//							.setContentTitle(caption)
+//							.setContentUrl(Uri.parse(url))
+//							.setImageUrl(Uri.parse(picture))
+//							.build();
 						ShareLinkContent linkContent = new ShareLinkContent.Builder()
-							.setContentDescription(text)
-							.setContentTitle(caption)
 							.setContentUrl(Uri.parse(url))
-							.setImageUrl(Uri.parse(picture))
 							.build();
 						Log.d(LOG_TAG, "shareDialog.show(linkContent)");
 						shareDialog.show(linkContent);
-					} else {
-						Log.d(LOG_TAG, "ShareDialog.canShow(ShareLinkContent.class) return  false");
 					}
+//					else {
+//						Log.d(LOG_TAG, "ShareDialog.canShow(ShareLinkContent.class) return  false");
+//					}
 				}
 			});
 		}		
@@ -300,9 +304,10 @@ public class ShareFacebook implements InterfaceShare{
 				.build();
 			Log.d(LOG_TAG, "shareDialog.show(ogContent)");
 			shareDialog.show(ogContent);
-		} else {
-			Log.d(LOG_TAG, "ShareDialog.canShow(ShareOpenGraphContent.class) return false");
 		}
+//		else {
+//			Log.d(LOG_TAG, "ShareDialog.canShow(ShareOpenGraphContent.class) return false");
+//		}
 	}
 	
 	private void FBSharePhotoDialog(JSONObject info) throws JSONException{
@@ -340,9 +345,10 @@ public class ShareFacebook implements InterfaceShare{
 						.build();
 			Log.d(LOG_TAG, "shareDialog.show(photoContent)");
 			shareDialog.show(photoContent);
-		} else {
-			Log.d(LOG_TAG, "ShareDialog.canShow(SharePhotoContent.class) return false");
 		}
+//		else {
+//			Log.d(LOG_TAG, "ShareDialog.canShow(SharePhotoContent.class) return false");
+//		}
 	}
 	public void appRequest(final JSONObject info){
 		PluginWrapper.runOnMainThread(new Runnable(){
@@ -386,21 +392,39 @@ public class ShareFacebook implements InterfaceShare{
 			actionType = ActionType.valueOf(strActionType);
 		}
 		String to = safeGetJsonString(info, "to");
-		String[] toIds = to.split(",");
-		if(toIds.length == 1 && to.length() > 15) {
-			toIds = to.split(" ");
-		}
+		String[] toIds = null;
 		List<String> toList = new ArrayList<String>();
-		for(int i = 0; i < toIds.length; i++) {
-			toList.add(toIds[i]);
+
+		if (to != null) {
+			toIds = to.split(",");
+			if(toIds.length == 1 && to.length() > 15) {
+				toIds = to.split(" ");
+			}
+			for(int i = 0; i < toIds.length; i++) {
+				toList.add(toIds[i]);
+			}
 		}
-		GameRequestContent requestContent = new GameRequestContent.Builder()
+
+		String filters = safeGetJsonString(info, "filters");
+		GameRequestContent requestContent = null;
+		if (filters != null && filters.equals("AppNonUsers")) {
+			requestContent = new GameRequestContent.Builder()
+			.setActionType(actionType)
+			.setMessage(message)
+			.setTitle(safeGetJsonString(info, "title"))
+			.setData(safeGetJsonString(info, "data"))
+			.setFilters(GameRequestContent.Filters.APP_NON_USERS)
+			.build();
+		}else {
+			requestContent = new GameRequestContent.Builder()
 			.setActionType(actionType)
 			.setMessage(message)
 			.setRecipients(toList)
 			.setTitle(safeGetJsonString(info, "title"))
 			.setData(safeGetJsonString(info, "data"))
 			.build();
+		}
+
 		GameRequestDialog requestDialog = new GameRequestDialog(mContext);
 		requestDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<GameRequestDialog.Result>() {
 			@Override
@@ -525,9 +549,10 @@ public class ShareFacebook implements InterfaceShare{
 			ShareFeedContent feedContent = builder.build();
 			Log.d(LOG_TAG, "shareDialog.show(feedContent)");
 			shareDialog.show(feedContent);
-		} else {
-			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
 		}
+//		else {
+//			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
+//		}
 	}
 	
 	private void WebFeedDialog(JSONObject info) throws JSONException{
@@ -604,9 +629,10 @@ public class ShareFacebook implements InterfaceShare{
 			ShareFeedContent feedContent = builder.build();
 			Log.d(LOG_TAG, "shareDialog.show(feedContent)");
 			shareDialog.show(feedContent);
-		} else {
-			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
 		}
+//		else {
+//			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
+//		}
 	}
 	
 	
