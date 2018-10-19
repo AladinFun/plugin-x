@@ -54,8 +54,12 @@ import com.facebook.share.model.ShareOpenGraphAction;
 import com.facebook.share.model.ShareOpenGraphContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.model.ShareMessengerURLActionButton;
+import com.facebook.share.model.ShareMessengerGenericTemplateElement;
+import com.facebook.share.model.ShareMessengerGenericTemplateContent;
 import com.facebook.share.widget.GameRequestDialog;
 import com.facebook.share.widget.ShareDialog;
+import com.facebook.share.widget.MessageDialog;
 
 public class ShareFacebook implements InterfaceShare{
 
@@ -634,13 +638,42 @@ public class ShareFacebook implements InterfaceShare{
 //			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
 //		}
 	}
-	
-	
+
 	private void FBMessageDialog(JSONObject info) throws JSONException{
-		FBShareDialog(info);
+		// FBShareDialog(info);
+		String link = null;
+		if ((link = safeGetJsonString(info, "link")) == null) {
+			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\": \"FBMessageDialog need to add property 'link'\"}");
+			return;
+		}
+
+		MessageDialog msgDialog = new MessageDialog(mContext);
+		msgDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onSuccess(Result result) {
+				Log.d(LOG_TAG, "FBMessageDialog() onSuccess " + result.getPostId());
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_SUCCESS, "{\"FBMessageDialog id\":\"" + result.getPostId() + "\"}");
+			}
+			@Override
+			public void onCancel() {
+				Log.d(LOG_TAG, "FBMessageDialog() onCancel");
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_CANCEL, "{ \"error_message\" : \"FBMessageDialog canceled\"}");
+			}
+			@Override
+			public void onError(FacebookException facebookException) {
+				Log.d(LOG_TAG, "FBMessageDialog() onError", facebookException);
+				ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
+			}
+		});
+
+		Log.d(LOG_TAG, "MessageDialog canShow ShareLinkContent: " + MessageDialog.canShow(ShareLinkContent.class));
+		if (MessageDialog.canShow(ShareLinkContent.class) || true) {
+			ShareLinkContent linkContent = new ShareLinkContent.Builder()
+				.setContentUrl(Uri.parse(link))
+				.build();
+			msgDialog.show(linkContent);
+		}
 	}
-	
-	
 
 	private void FBMessageOpenGraphDialog(JSONObject info) throws JSONException{
 		FBShareOpenGraphDialog(info);
