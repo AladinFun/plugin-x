@@ -671,7 +671,8 @@ public class ShareFacebook implements InterfaceShare{
 			ShareLinkContent linkContent = new ShareLinkContent.Builder()
 				.setContentUrl(Uri.parse(link))
 				.build();
-			msgDialog.show(linkContent);
+			// msgDialog.show(linkContent);
+			MessageDialog.show(mContext, linkContent);
 		}
 	}
 
