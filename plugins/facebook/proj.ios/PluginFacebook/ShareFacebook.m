@@ -216,7 +216,36 @@
                                             delegate:self];
         }
         else if ([dialog_type isEqualToString:@"messageLink"]) {
-            [FBSDKMessageDialog showWithContent:content delegate:self];
+//            [FBSDKMessageDialog showWithContent:content delegate:self];
+//            NSString *dialog_type = [shareInfo objectForKey:@"dialog"];
+            NSString *mainTitle       = [shareInfo objectForKey:@"mainTitle"];
+            NSString *subTitle        = [shareInfo objectForKey:@"subTitle"];
+            NSString *imageUrl        = [shareInfo objectForKey:@"imageUrl"];
+            NSString *buttonText      = [shareInfo objectForKey:@"buttonText"];
+            NSString *buttonActionUrl    = [shareInfo objectForKey:@"buttonActionUrl"];
+            NSString *messengerPageId = [shareInfo objectForKey:@"messengerPageId"];
+            
+            FBSDKShareMessengerURLActionButton *urlButton = [[FBSDKShareMessengerURLActionButton alloc] init];
+            urlButton.title = buttonText;//[NSString stringWithUTF8String:buttonText];
+            urlButton.url = [NSURL URLWithString:buttonActionUrl];//[NSURL URLWithString:buttonActionUrl];
+            
+            FBSDKShareMessengerGenericTemplateElement *element = [[FBSDKShareMessengerGenericTemplateElement alloc] init];
+            element.title = mainTitle;
+            element.subtitle = subTitle;
+            element.imageURL = [NSURL URLWithString:imageUrl];
+            element.button = urlButton;
+            
+            FBSDKShareMessengerGenericTemplateContent *content = [[FBSDKShareMessengerGenericTemplateContent alloc] init];
+            content.pageID = messengerPageId;//[NSString stringWithUTF8String:messengerPageId];
+            content.element = element;
+            
+            FBSDKMessageDialog *messageDialog = [[FBSDKMessageDialog alloc] init];
+            messageDialog.shareContent = content;
+            messageDialog.delegate = self;
+            
+            if([messageDialog canShow]) {
+                [messageDialog show];
+            }
         }
         else {
             not_supported = true;
