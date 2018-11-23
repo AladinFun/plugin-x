@@ -638,7 +638,7 @@ public class ShareFacebook implements InterfaceShare{
 //			Log.d(LOG_TAG, "ShareDialog.canShow(ShareFeedContent.class) return false");
 //		}
 	}
-
+	
 	private void FBMessageDialog(JSONObject info) throws JSONException{
 		// FBShareDialog(info);
 		String link = null;
@@ -666,14 +666,60 @@ public class ShareFacebook implements InterfaceShare{
 			}
 		});
 
-		Log.d(LOG_TAG, "MessageDialog canShow ShareLinkContent: " + MessageDialog.canShow(ShareLinkContent.class));
-		if (MessageDialog.canShow(ShareLinkContent.class) || true) {
-			ShareLinkContent linkContent = new ShareLinkContent.Builder()
-				.setContentUrl(Uri.parse(link))
-				.build();
-			// msgDialog.show(linkContent);
-			MessageDialog.show(mContext, linkContent);
-		}
+//		Log.d(LOG_TAG, "MessageDialog canShow ShareLinkContent: " + MessageDialog.canShow(ShareLinkContent.class));
+		try{
+			String mainTitle = safeGetJsonString(info, "mainTitle");
+			String subTitle = safeGetJsonString(info, "subTitle");
+			String imageUrl = safeGetJsonString(info, "imageUrl");
+			String buttonText = safeGetJsonString(info, "buttonText");
+			String buttonActionUrl = safeGetJsonString(info, "buttonActionUrl");
+			String messengerPageId = safeGetJsonString(info, "messengerPageId");
+		}catch(JSONException e){
+			Log.e(LOG_TAG, e.getMessage() + e.getStackTrace().toString());
+			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
+			return;
+		}	
+		
+		ShareMessengerURLActionButton actionButton = new ShareMessengerURLActionButton.Builder()
+	        .setTitle(buttonText)
+	        .setUrl(Uri.parse(buttonActionUrl))
+	        .build();
+		
+		ShareMessengerGenericTemplateElement genericTemplateElement =
+                new ShareMessengerGenericTemplateElement.Builder()
+                        .setTitle(mainTitle)
+                        .setSubtitle(subTitle)
+                        .setImageUrl(Uri.parse(imageUrl))
+                        .setButton(actionButton)
+                        .setDefaultAction(actionButton)
+                        .build();
+		
+		ShareMessengerGenericTemplateContent genericTemplateContent =
+                new ShareMessengerGenericTemplateContent.Builder()
+                        .setPageId(messengerPageId)
+                        .setGenericTemplateElement(genericTemplateElement)
+                        .build();
+
+        if (MessageDialog.canShow(genericTemplateContent.getClass())) {
+        	msgDialog.show(genericTemplateContent)
+        }else{
+        	ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
+	    	 try {
+	    		 msgDialog.show(genericTemplateContent);
+	         }
+	         catch (Exception e)
+	         {
+	             Log.e(LOG_TAG, e.getMessage() + e.getStackTrace().toString());
+	         }
+        }
+		
+//		if (MessageDialog.canShow(ShareLinkContent.class) || true) {
+//			ShareLinkContent linkContent = new ShareLinkContent.Builder()
+//				.setContentUrl(Uri.parse(link))
+//				.build();
+//			// msgDialog.show(linkContent);
+//			MessageDialog.show(mContext, linkContent);
+//		}
 	}
 
 	private void FBMessageOpenGraphDialog(JSONObject info) throws JSONException{
