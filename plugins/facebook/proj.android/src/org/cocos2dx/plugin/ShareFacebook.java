@@ -641,11 +641,13 @@ public class ShareFacebook implements InterfaceShare{
 	
 	private void FBMessageDialog(JSONObject info) throws JSONException{
 		// FBShareDialog(info);
+		Log.d(LOG_TAG, "FBMessageDialog1");
 		String link = null;
 		if ((link = safeGetJsonString(info, "link")) == null) {
 			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\": \"FBMessageDialog need to add property 'link'\"}");
 			return;
 		}
+		Log.d(LOG_TAG, "FBMessageDialog2");
 
 		MessageDialog msgDialog = new MessageDialog(mContext);
 		msgDialog.registerCallback(FacebookWrapper.callbackManager, new FacebookCallback<Sharer.Result>() {
@@ -667,19 +669,25 @@ public class ShareFacebook implements InterfaceShare{
 		});
 
 //		Log.d(LOG_TAG, "MessageDialog canShow ShareLinkContent: " + MessageDialog.canShow(ShareLinkContent.class));
-		try{
+		// try{
+		Log.d(LOG_TAG, "FBMessageDialog3");
 			String mainTitle = safeGetJsonString(info, "mainTitle");
 			String subTitle = safeGetJsonString(info, "subTitle");
 			String imageUrl = safeGetJsonString(info, "imageUrl");
 			String buttonText = safeGetJsonString(info, "buttonText");
 			String buttonActionUrl = safeGetJsonString(info, "buttonActionUrl");
 			String messengerPageId = safeGetJsonString(info, "messengerPageId");
-		}catch(JSONException e){
-			Log.e(LOG_TAG, e.getMessage() + e.getStackTrace().toString());
+		// }catch(JSONException e){
+		// 	Log.e(LOG_TAG, e.getMessage() + e.getStackTrace().toString());
+		// 	ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
+		// 	return;
+		// }
+			Log.d(LOG_TAG, "FBMessageDialog4");
+		if(mainTitle == null || subTitle == null || imageUrl == null || buttonText == null || buttonActionUrl == null || messengerPageId == null){
 			ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
 			return;
 		}	
-		
+		Log.d(LOG_TAG, "FBMessageDialog5");
 		ShareMessengerURLActionButton actionButton = new ShareMessengerURLActionButton.Builder()
 	        .setTitle(buttonText)
 	        .setUrl(Uri.parse(buttonActionUrl))
@@ -701,8 +709,10 @@ public class ShareFacebook implements InterfaceShare{
                         .build();
 
         if (MessageDialog.canShow(genericTemplateContent.getClass())) {
-        	msgDialog.show(genericTemplateContent)
+        	Log.d(LOG_TAG, "FBMessageDialog6");
+        	msgDialog.show(genericTemplateContent);
         }else{
+        	Log.d(LOG_TAG, "FBMessageDialog7");
         	ShareWrapper.onShareResult(mAdapter, ShareWrapper.SHARERESULT_FAIL, "{ \"error_message\" : \"FBMessageDialog share failed\"}");
 	    	 try {
 	    		 msgDialog.show(genericTemplateContent);
