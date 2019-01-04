@@ -11,7 +11,7 @@ dependencies {
     compile 'com.facebook.android:facebook-messenger:4.+'
     compile 'com.facebook.android:facebook-applinks:4.+'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
-    compile 'com.facebook.android:audience-network-sdk:5.+'
+    compile 'com.facebook.android:audience-network-sdk:5.1.0'
 
     compile project(':runtime-src:proj.android.nativeutil')
 }
