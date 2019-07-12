@@ -76,7 +76,7 @@ NSString *_accessToken = @"";
     } else if(!accessToken || [readPermissionNeeded count] > 0){
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
         UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-        [loginManager logInWithReadPermissions:readPermissionNeeded
+        [loginManager logInWithPermissions:readPermissionNeeded
                             fromViewController:rootViewController
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                            if (error) {
@@ -95,7 +95,7 @@ NSString *_accessToken = @"";
                                                    NSString *msg = [ParseUtils NSDictionaryToNSString:result];
                                                    [UserWrapper onActionResult:self withRet:kLoginSucceed withMsg:msg];
                                                } else {
-                                                   [loginManager logInWithPublishPermissions:publishPermissionNeeded
+                                                   [loginManager logInWithPermissions:publishPermissionNeeded
                                                                           fromViewController:rootViewController
                                                                                      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                                                                          if (error) {
@@ -121,7 +121,7 @@ NSString *_accessToken = @"";
     } else {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
         UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-        [loginManager logInWithPublishPermissions:publishPermissionNeeded
+        [loginManager logInWithPermissions:publishPermissionNeeded
                                fromViewController:rootViewController
                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                               if (error) {
@@ -272,7 +272,7 @@ NSString *_accessToken = @"";
     } else if([readPermissionNeeded count] > 0) {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
         UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-        [loginManager logInWithReadPermissions:readPermissionNeeded
+        [loginManager logInWithPermissions:readPermissionNeeded
                             fromViewController:rootViewController
                                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                            if (error) {
@@ -293,7 +293,7 @@ NSString *_accessToken = @"";
                                                        [UserWrapper onPermissionsResult:self withRet:kPermissionFailed withMsg:msg];
                                                    }
                                                } else {
-                                                   [loginManager logInWithPublishPermissions:publishPermissionNeeded
+                                                   [loginManager logInWithPermissions:publishPermissionNeeded
                                                                           fromViewController:rootViewController
                                                                                      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                                                                          if (error) {
@@ -320,7 +320,7 @@ NSString *_accessToken = @"";
     } else {
         FBSDKLoginManager* loginManager = [[FBSDKLoginManager alloc] init];
         UIViewController* rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-        [loginManager logInWithPublishPermissions:publishPermissionNeeded
+        [loginManager logInWithPermissions:publishPermissionNeeded
                                fromViewController:rootViewController
                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                               if (error) {
