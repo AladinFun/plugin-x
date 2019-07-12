@@ -255,7 +255,7 @@ public class UserFacebook implements InterfaceUser{
     }
     
     public void activateApp(){
-   	    AppEventsLogger.activateApp(mContext);
+   	    // AppEventsLogger.activateApp(mContext);
 //    	com.facebook.Settings.publishInstallAsync(mContext, Settings.getApplicationId());
     }    
     

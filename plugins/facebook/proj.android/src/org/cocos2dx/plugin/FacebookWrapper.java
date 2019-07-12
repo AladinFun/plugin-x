@@ -244,11 +244,25 @@ public class FacebookWrapper {
 	}
 	
 	public static void onPause(Activity activity) {
-		AppEventsLogger.deactivateApp(activity);
+		// if(activity != null)
+		// {
+		// 	AppEventsLogger.deactivateApp(activity);
+		// }
+		// else
+		// {
+		// 	Log.i(TAG, "onPause activity is null");
+		// }
 	}
 	
 	public static void onResume(Activity activity) {
-		AppEventsLogger.activateApp(activity);
+		// if(activity != null)
+		// {
+		// 	AppEventsLogger.activateApp(activity);
+		// }
+		// else
+		// {
+		// 	Log.i(TAG, "onResume activity is null");
+		// }
 	}
 	
 	public static void onDestroy(Activity activity) {
